@@ -7,15 +7,6 @@ I followed a fairly standard bronze → silver pattern here:
   - silver: cleaned/typed/deduplicated (data/processed/)
 Nothing fancy, but keeps the pipeline easy to reason about.
 """
-process_data.py
----------------
-ETL / ELT processing pipeline:
-  Bronze  → data/raw/           (as-scraped CSVs)
-  Silver  → data/processed/     (cleaned, validated, enriched)
-  Gold    → data/marts/         (star-schema ready, dashboard-ready)
-
-Runs data quality checks at each stage and logs results.
-"""
 
 import logging
 import os
