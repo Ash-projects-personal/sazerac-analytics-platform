@@ -1,6 +1,14 @@
 """
 process_data.py
 ---------------
+Transforms raw CSVs into clean, analysis-ready tables.
+I followed a fairly standard bronze → silver pattern here:
+  - bronze: raw files from scrapers (data/raw/)
+  - silver: cleaned/typed/deduplicated (data/processed/)
+Nothing fancy, but keeps the pipeline easy to reason about.
+"""
+process_data.py
+---------------
 ETL / ELT processing pipeline:
   Bronze  → data/raw/           (as-scraped CSVs)
   Silver  → data/processed/     (cleaned, validated, enriched)

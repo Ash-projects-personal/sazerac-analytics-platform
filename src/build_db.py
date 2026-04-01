@@ -1,6 +1,13 @@
 """
 build_db.py
 -----------
+Loads processed CSVs into a local SQLite database and creates
+analytical views on top. I chose SQLite for portability -- zero config,
+works in CI, and the dashboard can query it directly via pandas.
+In a real prod setup this would point at Snowflake or Azure SQL.
+"""
+build_db.py
+-----------
 Loads cleaned CSVs into a SQLite analytical database.
 Creates the star-schema dimensional model:
 

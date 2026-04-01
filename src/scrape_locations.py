@@ -339,11 +339,17 @@ MOCK_LOCATIONS = [
 
 
 def get_region(country: str) -> str:
+    """Map country to region code for dashboard grouping.
+    Kept this simple -- could hook into a proper ISO 3166 library
+    but overkill for 24 locations.
+    """
     return COUNTRY_REGION.get(country, "Other")
 
 
 def get_locations() -> list[dict]:
-    """Return locations from live scrape or mock data."""
+    """Try live scrape of sazerac.com contact/about pages, fall back to curated list.
+    Their site doesn't expose structured location data so the scraper is best-effort.
+    The curated fallback is what actually runs in CI."""
     if SCRAPING_AVAILABLE:
         try:
             urls = [
@@ -384,6 +390,9 @@ def get_locations() -> list[dict]:
 
 
 def save_locations(locations: list[dict], path: str) -> None:
+    """Persist location records to CSV with region and audit columns."""
+    # Added region column here rather than in SQL so the dashboard
+    # doesn't need a lookup join every time it renders the map.
     os.makedirs(os.path.dirname(path), exist_ok=True)
     fieldnames = [
         "location_id",

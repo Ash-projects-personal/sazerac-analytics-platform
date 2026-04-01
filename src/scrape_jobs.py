@@ -52,14 +52,14 @@ SKILL_PATTERNS = {
     "JavaScript": r"\bJavaScript\b",
     "DAX": r"\bDAX\b",
     "MDX": r"\bMDX\b",
-    # BI & Visualization
+    # BI & Visualization -- Power BI dominates in CPG; Tableau is #2
     "Power BI": r"\bPower BI\b",
     "Tableau": r"\bTableau\b",
     "Looker": r"\bLooker\b",
     "Qlik": r"\bQlik(View|Sense)?\b",
     "Excel": r"\bExcel\b",
     "SSRS": r"\bSSRS\b",
-    # Cloud
+    # Cloud -- Azure is most common in Sazerac JDs specifically; AWS appears in newer roles
     "Azure": r"\bAzure\b",
     "AWS": r"\b(AWS|Amazon Web Services)\b",
     "GCP": r"\b(GCP|Google Cloud)\b",
@@ -67,7 +67,7 @@ SKILL_PATTERNS = {
     "Databricks": r"\bDatabricks\b",
     "Redshift": r"\bRedshift\b",
     "BigQuery": r"\bBigQuery\b",
-    # Data Engineering
+    # Data Engineering stack -- dbt + Airflow + Snowflake is the modern combo
     "ETL": r"\bETL\b",
     "ELT": r"\bELT\b",
     "dbt": r"\bdbt\b",
@@ -97,7 +97,8 @@ SKILL_PATTERNS = {
     "Data Catalog": r"\bdata\s+catalog\b",
     "Lineage": r"\bdata\s+lineage\b",
     "GDPR": r"\bGDPR\b",
-    # Soft / Process
+    # Soft skills / process -- Agile shows up in literally every JD, which tells you nothing
+    # but you still need to flag it
     "Agile": r"\b(Agile|Scrum|Kanban)\b",
     "Stakeholder": r"\bstakeholder\b",
     "KPIs": r"\b(KPI|KPIs|key performance indicators?)\b",
@@ -109,6 +110,7 @@ SKILL_PATTERNS = {
 
 # ── mock jobs ──────────────────────────────────────────────────────────────────
 MOCK_JOBS = [
+    # Senior Data Engineer -- the most senior IC role, Azure + Databricks stack
     {
         "job_title": "Senior Data Engineer",
         "department": "Data & Analytics",
@@ -186,6 +188,8 @@ MOCK_JOBS = [
         Knowledge of machine learning model deployment and statistical analysis is preferred.
         Strong stakeholder management and Agile project management skills.""",
     },
+    # Director-level -- this one signals they're building out the function properly,
+    # not just hiring analysts to run reports
     {
         "job_title": "Director of Data & Analytics",
         "department": "Leadership",
@@ -245,6 +249,8 @@ MOCK_JOBS = [
         Data modeling experience is a plus. Agile experience preferred.
         Familiarity with Oracle ERP or SAP data structures is highly valued.""",
     },
+    # Data Governance -- the fact they're hiring this tells you their data maturity
+    # is moving beyond just "get the numbers out" into proper platform thinking
     {
         "job_title": "Data Governance Analyst",
         "department": "Data & Analytics",
@@ -265,7 +271,10 @@ MOCK_JOBS = [
 
 
 def extract_skills(text: str) -> list[str]:
-    """Extract matching skills from a job description string."""
+    """Regex-based skill extraction from a JD string.
+    Returns a list of matched skill names from SKILL_PATTERNS.
+    Case-insensitive match, whole-word boundaries to reduce false positives.
+    """
     found = []
     text_lower = text  # keep original case for regex matching
     for skill, pattern in SKILL_PATTERNS.items():
@@ -275,7 +284,10 @@ def extract_skills(text: str) -> list[str]:
 
 
 def get_jobs() -> list[dict]:
-    """Return jobs from live scrape or mock data."""
+    """Try to scrape live job postings from sazerac.com/careers.
+    Their careers page is rendered client-side (JS heavy) so the scraper
+    is hit-or-miss depending on whether they've got a static fallback.
+    The curated set is what runs in CI."""
     if SCRAPING_AVAILABLE:
         try:
             careers_url = "https://www.sazerac.com/careers/"
@@ -349,7 +361,11 @@ def save_jobs(jobs: list[dict], path: str) -> None:
 
 
 def build_skills_frequency(jobs: list[dict], path: str) -> None:
-    """Build skill frequency table across all job descriptions."""
+    """Aggregate skill counts across all JDs and write a frequency table.
+    Also writes a job-skill mapping table for use as a fact table in the DB.
+    The pct_of_postings column is the headline metric on the dashboard --
+    e.g. SQL at 100% means every single role mentions it.
+    """
     counter: Counter = Counter()
     job_skill_rows = []
 

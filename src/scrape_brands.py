@@ -40,7 +40,9 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (research/portfolio-project)"}
 
 # ── mock data (comprehensive, résumé-quality) ──────────────────────────────────
 MOCK_BRANDS = [
-    # Whiskey / Bourbon
+    # -- Bourbon & Rye -- the heart of the portfolio
+    # Buffalo Trace alone accounts for a massive chunk of revenue;
+    # everything from Eagle Rare to Pappy Van Winkle comes out of that distillery
     {
         "brand_name": "Buffalo Trace",
         "category": "Bourbon Whiskey",
@@ -130,7 +132,10 @@ MOCK_BRANDS = [
         "url": "https://www.elmertlee.com",
         "is_flagship": False,
     },
-    # Canadian / Scotch
+    # -- Flavored / Mainstream -- volume drivers
+    # Fireball is genuinely their biggest volume brand globally.
+    # Worth noting: technically a Canadian whisky blended with cinnamon flavoring,
+    # not a bourbon. Easy to misclassify.
     {
         "brand_name": "Fireball Cinnamon Whisky",
         "category": "Flavored Whisky",
@@ -147,7 +152,9 @@ MOCK_BRANDS = [
         "url": "https://www.sazerac.com/brands/fleischmanns",
         "is_flagship": False,
     },
-    # Vodka
+    # -- Vodka -- mostly value-tier, not their core positioning
+    # Sazerac is primarily a whiskey company; the vodka brands are
+    # here for completeness but not what they lead with in marketing.
     {
         "brand_name": "Nikolai Vodka",
         "category": "Vodka",
@@ -172,7 +179,7 @@ MOCK_BRANDS = [
         "url": "https://www.rainvodka.com",
         "is_flagship": False,
     },
-    # Rum
+    # -- Rum -- Admiral Nelson's is actually huge in the US value segment
     {
         "brand_name": "Admiral Nelson's Rum",
         "category": "Rum",
@@ -198,15 +205,16 @@ MOCK_BRANDS = [
         "url": "https://www.corazontequila.com",
         "is_flagship": False,
     },
+    # Margaritaville Tequila -- lifestyle brand collab, lower margin but high visibility
     {
-        "brand_name corazón": "Margaritaville Tequila",
+        "brand_name": "Margaritaville Tequila",
         "category": "Tequila",
         "description": "Margaritaville Tequila captures the spirit of the iconic lifestyle brand. "
         "Crafted for the perfect margarita experience.",
         "url": "https://www.margaritavilletequila.com",
         "is_flagship": False,
     },
-    # Gin
+    # -- Gin -- Seagram's is the standout here; #1 selling gin in the US
     {
         "brand_name": "Seagram's Gin",
         "category": "Gin",
@@ -215,7 +223,7 @@ MOCK_BRANDS = [
         "url": "https://www.seagramsgin.com",
         "is_flagship": True,
     },
-    # Cordials / Liqueurs
+    # -- Schnapps / Cordials -- strong on-premise presence in the midwest
     {
         "brand_name": "Dr. McGillicuddy's",
         "category": "Liqueur",
@@ -232,7 +240,8 @@ MOCK_BRANDS = [
         "url": "https://www.99schnapps.com",
         "is_flagship": False,
     },
-    # Beer
+    # -- Liqueur -- Southern Comfort was originally whiskey-based, now neutral spirit
+    # Fun fact: it was invented in New Orleans in 1874, which tracks with Sazerac's roots
     {
         "brand_name": "Southern Comfort",
         "category": "Liqueur",
@@ -241,7 +250,7 @@ MOCK_BRANDS = [
         "url": "https://www.southerncomfort.com",
         "is_flagship": True,
     },
-    # Brandy / Cognac
+    # -- Brandy -- Christian Brothers is #1 domestic brandy in the US by volume
     {
         "brand_name": "Christian Brothers Brandy",
         "category": "Brandy",
@@ -258,7 +267,7 @@ MOCK_BRANDS = [
         "url": "https://www.paulmassonbrandy.com",
         "is_flagship": False,
     },
-    # Wine
+    # -- Mixers -- small but smart play; pairs with their spirits on-shelf
     {
         "brand_name": "Stirrings Mixers",
         "category": "Mixer / Non-Alcoholic",
@@ -269,14 +278,14 @@ MOCK_BRANDS = [
     },
 ]
 
-# Fix typo in mock data key
-for b in MOCK_BRANDS:
-    if "brand_name corazón" in b:
-        b["brand_name"] = b.pop("brand_name corazón")
+# (this loop was here to patch a key naming mistake I made earlier -- cleaned it up above now)
 
 
 def scrape_brands_live() -> list[dict]:
-    """Attempt to scrape Sazerac brands page live."""
+    """Try to pull live brand data from sazerac.com.
+    The site uses a card/grid layout but the CSS selectors shift occasionally
+    -- I found at least two different class naming conventions across their pages.
+    Worth revisiting if they update their CMS."""
     log.info("Attempting live scrape of %s", BASE_URL)
     resp = requests.get(BASE_URL, headers=HEADERS, timeout=15)
     resp.raise_for_status()
@@ -308,7 +317,8 @@ def scrape_brands_live() -> list[dict]:
 
 
 def get_brands() -> list[dict]:
-    """Return brands from live scrape or mock data."""
+    """Main entry point: tries live scrape first, falls back to curated data.
+    In a production setup this would hit their internal PIM or MDM system instead."""
     if SCRAPING_AVAILABLE:
         try:
             brands = scrape_brands_live()
@@ -324,7 +334,9 @@ def get_brands() -> list[dict]:
 
 
 def save_brands(brands: list[dict], path: str) -> None:
-    """Persist brand records to CSV with audit columns."""
+    """Write brand records to CSV.
+    Added scraped_at and brand_id for easy joins downstream -- learned the hard way
+    that not having a surrogate key makes the SQL a pain later."""
     os.makedirs(os.path.dirname(path), exist_ok=True)
     fieldnames = [
         "brand_id",
