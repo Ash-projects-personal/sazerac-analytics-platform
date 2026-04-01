@@ -1,0 +1,21 @@
+Skill,Frequency,% of Postings,Category,Demand Tier
+SQL,10,100.0,Language / Query,Tier 1 — Must Have
+Data Quality,10,100.0,Governance,Tier 1 — Must Have
+Python,9,90.0,Language / Query,Tier 1 — Must Have
+Power BI,9,90.0,BI / Visualization,Tier 1 — Must Have
+Reporting,9,90.0,Analytics / Modeling,Tier 1 — Must Have
+Business Intelligence,9,90.0,Analytics / Modeling,Tier 1 — Must Have
+Data Warehouse,7,70.0,Analytics / Modeling,Tier 1 — Must Have
+Agile,7,70.0,Analytics / Modeling,Tier 1 — Must Have
+KPIs,7,70.0,Analytics / Modeling,Tier 1 — Must Have
+Snowflake,6,60.0,Cloud / Platform,Tier 2 — Strongly Preferred
+SQL Server,6,60.0,Analytics / Modeling,Tier 2 — Strongly Preferred
+Data Governance,6,60.0,Governance,Tier 2 — Strongly Preferred
+Azure,5,50.0,Cloud / Platform,Tier 2 — Strongly Preferred
+ETL,5,50.0,Data Engineering,Tier 2 — Strongly Preferred
+Dimensional Modeling,5,50.0,Analytics / Modeling,Tier 2 — Strongly Preferred
+Databricks,4,40.0,Cloud / Platform,Tier 2 — Strongly Preferred
+Airflow,4,40.0,Data Engineering,Tier 2 — Strongly Preferred
+Excel,4,40.0,BI / Visualization,Tier 2 — Strongly Preferred
+Data Modeling,4,40.0,Analytics / Modeling,Tier 2 — Strongly Preferred
+dbt,3,30.0,Data Engineering,Tier 3 — Nice to Have

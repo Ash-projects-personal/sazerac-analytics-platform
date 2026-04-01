@@ -1,0 +1,46 @@
+skill,skill_category,frequency,pct_of_postings,demand_tier,skill_rank
+SQL,Language / Query,10,100.0,Tier 1 — Must Have,1
+Data Quality,Governance,10,100.0,Tier 1 — Must Have,1
+Python,Language / Query,9,90.0,Tier 1 — Must Have,3
+Power BI,BI / Visualization,9,90.0,Tier 1 — Must Have,3
+Reporting,Analytics / Modeling,9,90.0,Tier 1 — Must Have,3
+Business Intelligence,Analytics / Modeling,9,90.0,Tier 1 — Must Have,3
+Data Warehouse,Analytics / Modeling,7,70.0,Tier 1 — Must Have,7
+Agile,Analytics / Modeling,7,70.0,Tier 1 — Must Have,7
+KPIs,Analytics / Modeling,7,70.0,Tier 1 — Must Have,7
+Snowflake,Cloud / Platform,6,60.0,Tier 2 — Strongly Preferred,10
+SQL Server,Analytics / Modeling,6,60.0,Tier 2 — Strongly Preferred,10
+Data Governance,Governance,6,60.0,Tier 2 — Strongly Preferred,10
+Azure,Cloud / Platform,5,50.0,Tier 2 — Strongly Preferred,13
+ETL,Data Engineering,5,50.0,Tier 2 — Strongly Preferred,13
+Dimensional Modeling,Analytics / Modeling,5,50.0,Tier 2 — Strongly Preferred,13
+Databricks,Cloud / Platform,4,40.0,Tier 2 — Strongly Preferred,16
+Airflow,Data Engineering,4,40.0,Tier 2 — Strongly Preferred,16
+Excel,BI / Visualization,4,40.0,Tier 2 — Strongly Preferred,16
+Data Modeling,Analytics / Modeling,4,40.0,Tier 2 — Strongly Preferred,16
+dbt,Data Engineering,3,30.0,Tier 3 — Nice to Have,20
+Star Schema,Analytics / Modeling,3,30.0,Tier 3 — Nice to Have,20
+Tableau,BI / Visualization,3,30.0,Tier 3 — Nice to Have,20
+Looker,BI / Visualization,3,30.0,Tier 3 — Nice to Have,20
+Statistics,Analytics / Modeling,3,30.0,Tier 3 — Nice to Have,20
+AWS,Cloud / Platform,3,30.0,Tier 3 — Nice to Have,20
+GCP,Cloud / Platform,3,30.0,Tier 3 — Nice to Have,20
+Machine Learning,Analytics / Modeling,3,30.0,Tier 3 — Nice to Have,20
+Data Catalog,Governance,3,30.0,Tier 3 — Nice to Have,20
+Stakeholder,Analytics / Modeling,3,30.0,Tier 3 — Nice to Have,20
+ELT,Data Engineering,2,20.0,Tier 3 — Nice to Have,30
+Data Lake,Analytics / Modeling,2,20.0,Tier 3 — Nice to Have,30
+Data Lakehouse,Analytics / Modeling,2,20.0,Tier 3 — Nice to Have,30
+BigQuery,Cloud / Platform,2,20.0,Tier 3 — Nice to Have,30
+Spark,Data Engineering,2,20.0,Tier 3 — Nice to Have,30
+Lineage,Governance,2,20.0,Tier 3 — Nice to Have,30
+GDPR,Governance,2,20.0,Tier 3 — Nice to Have,30
+PostgreSQL,Analytics / Modeling,1,10.0,Tier 4 — Bonus,37
+R,Language / Query,1,10.0,Tier 4 — Bonus,37
+DAX,Language / Query,1,10.0,Tier 4 — Bonus,37
+SSRS,BI / Visualization,1,10.0,Tier 4 — Bonus,37
+Redshift,Cloud / Platform,1,10.0,Tier 4 — Bonus,37
+OLAP,Analytics / Modeling,1,10.0,Tier 4 — Bonus,37
+Dashboards,Analytics / Modeling,1,10.0,Tier 4 — Bonus,37
+Data Pipeline,Data Engineering,1,10.0,Tier 4 — Bonus,37
+Oracle,Analytics / Modeling,1,10.0,Tier 4 — Bonus,37

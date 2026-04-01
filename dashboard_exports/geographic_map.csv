@@ -1,0 +1,25 @@
+Location,City,State,Country,Region,Type,Latitude,Longitude,Employees
+Buffalo Trace Distillery,Frankfort,Kentucky,United States,Americas,Distillery,38.2009,-84.8733,450
+Barton 1792 Distillery,Bardstown,Kentucky,United States,Americas,Distillery,37.809,-85.4669,300
+Glenmore Distillery,Owensboro,Kentucky,United States,Americas,Distillery,37.7719,-87.1112,200
+Medley Distillery,Owensboro,Kentucky,United States,Americas,Distillery,37.773,-87.115,120
+A. Smith Bowman Distillery,Fredericksburg,Virginia,United States,Americas,Distillery,38.3032,-77.4605,80
+Sazerac Company Headquarters,Louisville,Kentucky,United States,Americas,Headquarters,38.2527,-85.7585,600
+Sazerac New Orleans Office,New Orleans,Louisiana,United States,Americas,Office,29.9511,-90.0715,150
+Sazerac Atlanta Regional Office,Atlanta,Georgia,United States,Americas,Office,33.749,-84.388,75
+Sazerac Chicago Regional Office,Chicago,Illinois,United States,Americas,Office,41.8781,-87.6298,90
+Sazerac New York Regional Office,New York City,New York,United States,Americas,Office,40.7128,-74.006,110
+Sazerac Los Angeles Regional Office,Los Angeles,California,United States,Americas,Office,34.0522,-118.2437,85
+Sazerac Dallas Regional Office,Dallas,Texas,United States,Americas,Office,32.7767,-96.797,60
+Sazerac Distribution Center — Louisville,Louisville,Kentucky,United States,Americas,Distribution Center,38.22,-85.75,250
+Sazerac Distribution Center — Memphis,Memphis,Tennessee,United States,Americas,Distribution Center,35.1495,-90.049,180
+Sazerac UK Office,London,England,United Kingdom,Europe,International Office,51.5074,-0.1278,45
+Sazerac Germany Office,Hamburg,Hamburg,Germany,Europe,International Office,53.5511,9.9937,30
+Sazerac France Office,Paris,Île-de-France,France,Europe,International Office,48.8566,2.3522,25
+Sazerac Australia Office,Sydney,New South Wales,Australia,APAC,International Office,-33.8688,151.2093,20
+Sazerac Japan Office,Tokyo,Tokyo,Japan,APAC,International Office,35.6762,139.6503,15
+Sazerac Canada Office,Toronto,Ontario,Canada,Americas,International Office,43.6532,-79.3832,35
+Sazerac Mexico Office,Mexico City,CDMX,Mexico,Americas,International Office,19.4326,-99.1332,28
+Sazerac Singapore Office,Singapore,Central Region,Singapore,APAC,International Office,1.3521,103.8198,12
+Sazerac Brazil Office,São Paulo,São Paulo,Brazil,Americas,International Office,-23.5505,-46.6333,18
+Sazerac South Africa Office,Cape Town,Western Cape,South Africa,EMEA,International Office,-33.9249,18.4241,10

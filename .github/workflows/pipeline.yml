@@ -1,0 +1,143 @@
+name: Sazerac Analytics Pipeline CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Run pipeline weekly — Sunday 6am UTC
+    - cron: '0 6 * * 0'
+
+jobs:
+  # ── Job 1: Lint & Code Quality ─────────────────────────────────────────────
+  lint:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dev dependencies
+        run: |
+          pip install black ruff
+
+      - name: Run Black formatter check
+        run: black --check src/ --line-length 100
+
+      - name: Run Ruff linter
+        run: ruff check src/
+
+  # ── Job 2: Full Pipeline Run ───────────────────────────────────────────────
+  pipeline:
+    name: ETL Pipeline
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create output directories
+        run: |
+          mkdir -p data/raw data/processed data/marts dashboard_exports logs dashboard
+
+      - name: Run scraper — brands
+        run: python src/scrape_brands.py
+
+      - name: Run scraper — locations
+        run: python src/scrape_locations.py
+
+      - name: Run scraper — jobs & skills
+        run: python src/scrape_jobs.py
+
+      - name: Run ETL pipeline
+        run: python src/process_data.py
+
+      - name: Build data warehouse
+        run: python src/build_db.py
+
+      - name: Generate dashboard
+        run: python src/build_dashboard.py
+
+      - name: Validate data quality
+        run: |
+          python -c "
+          import sqlite3, sys
+          conn = sqlite3.connect('data/sazerac_analytics.db')
+          tables = ['dim_brand', 'dim_location', 'fact_jobs', 'fact_job_skills']
+          for t in tables:
+              count = conn.execute(f'SELECT COUNT(*) FROM {t}').fetchone()[0]
+              assert count > 0, f'Table {t} is empty!'
+              print(f'  ✓ {t}: {count} rows')
+          conn.close()
+          print('All validation checks passed.')
+          "
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sazerac-dashboard-${{ github.sha }}
+          path: |
+            dashboard/sazerac_dashboard.html
+            data/marts/
+            dashboard_exports/
+          retention-days: 30
+
+  # ── Job 3: Deploy dashboard to GitHub Pages ────────────────────────────────
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: pipeline
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install & run pipeline
+        run: |
+          pip install -r requirements.txt
+          mkdir -p data/raw data/processed data/marts dashboard_exports logs dashboard
+          python src/scrape_brands.py
+          python src/scrape_locations.py
+          python src/scrape_jobs.py
+          python src/process_data.py
+          python src/build_db.py
+          python src/build_dashboard.py
+          cp dashboard/sazerac_dashboard.html dashboard/index.html
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dashboard/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

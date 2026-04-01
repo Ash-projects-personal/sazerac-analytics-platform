@@ -1,0 +1,8 @@
+department,job_count,remote_count,hybrid_count,avg_skills_required,seniority_mix,pct_of_openings
+Data & Analytics,4,1,0,17.5,Senior | Mid-Level | Mid-Level | Mid-Level,40.0
+Commercial / Sales Analytics,1,0,1,17.0,Mid-Level,10.0
+Finance Analytics,1,0,0,14.0,Junior,10.0
+IT & Technology,1,0,0,20.0,Mid-Level,10.0
+Innovation & Strategy,1,1,0,20.0,Mid-Level,10.0
+Leadership,1,0,0,25.0,Senior Leadership,10.0
+Supply Chain & Operations,1,0,0,13.0,Mid-Level,10.0

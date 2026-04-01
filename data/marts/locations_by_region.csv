@@ -1,0 +1,9 @@
+region,location_type,location_count,total_employees,country_count,countries
+APAC,International Office,3,47,3,"Australia,Japan,Singapore"
+Americas,Office,6,570,1,United States
+Americas,Distillery,5,1150,1,United States
+Americas,International Office,3,81,3,"Canada,Mexico,Brazil"
+Americas,Distribution Center,2,430,1,United States
+Americas,Headquarters,1,600,1,United States
+EMEA,International Office,1,10,1,South Africa
+Europe,International Office,3,100,3,"United Kingdom,Germany,France"
