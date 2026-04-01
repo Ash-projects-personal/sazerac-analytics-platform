@@ -1,0 +1,46 @@
+skill,frequency,pct_of_postings,demand_tier,skill_category,processed_at
+SQL,10,100.0,Tier 1 — Must Have,Language / Query,2026-03-31T23:59:15.870742
+Data Quality,10,100.0,Tier 1 — Must Have,Governance,2026-03-31T23:59:15.870742
+Python,9,90.0,Tier 1 — Must Have,Language / Query,2026-03-31T23:59:15.870742
+Power BI,9,90.0,Tier 1 — Must Have,BI / Visualization,2026-03-31T23:59:15.870742
+Reporting,9,90.0,Tier 1 — Must Have,Analytics / Modeling,2026-03-31T23:59:15.870742
+Business Intelligence,9,90.0,Tier 1 — Must Have,Analytics / Modeling,2026-03-31T23:59:15.870742
+Data Warehouse,7,70.0,Tier 1 — Must Have,Analytics / Modeling,2026-03-31T23:59:15.870742
+Agile,7,70.0,Tier 1 — Must Have,Analytics / Modeling,2026-03-31T23:59:15.870742
+KPIs,7,70.0,Tier 1 — Must Have,Analytics / Modeling,2026-03-31T23:59:15.870742
+Snowflake,6,60.0,Tier 2 — Strongly Preferred,Cloud / Platform,2026-03-31T23:59:15.870742
+SQL Server,6,60.0,Tier 2 — Strongly Preferred,Analytics / Modeling,2026-03-31T23:59:15.870742
+Data Governance,6,60.0,Tier 2 — Strongly Preferred,Governance,2026-03-31T23:59:15.870742
+Azure,5,50.0,Tier 2 — Strongly Preferred,Cloud / Platform,2026-03-31T23:59:15.870742
+ETL,5,50.0,Tier 2 — Strongly Preferred,Data Engineering,2026-03-31T23:59:15.870742
+Dimensional Modeling,5,50.0,Tier 2 — Strongly Preferred,Analytics / Modeling,2026-03-31T23:59:15.870742
+Databricks,4,40.0,Tier 2 — Strongly Preferred,Cloud / Platform,2026-03-31T23:59:15.870742
+Airflow,4,40.0,Tier 2 — Strongly Preferred,Data Engineering,2026-03-31T23:59:15.870742
+Excel,4,40.0,Tier 2 — Strongly Preferred,BI / Visualization,2026-03-31T23:59:15.870742
+Data Modeling,4,40.0,Tier 2 — Strongly Preferred,Analytics / Modeling,2026-03-31T23:59:15.870742
+dbt,3,30.0,Tier 3 — Nice to Have,Data Engineering,2026-03-31T23:59:15.870742
+Star Schema,3,30.0,Tier 3 — Nice to Have,Analytics / Modeling,2026-03-31T23:59:15.870742
+Tableau,3,30.0,Tier 3 — Nice to Have,BI / Visualization,2026-03-31T23:59:15.870742
+Looker,3,30.0,Tier 3 — Nice to Have,BI / Visualization,2026-03-31T23:59:15.870742
+Statistics,3,30.0,Tier 3 — Nice to Have,Analytics / Modeling,2026-03-31T23:59:15.870742
+AWS,3,30.0,Tier 3 — Nice to Have,Cloud / Platform,2026-03-31T23:59:15.870742
+GCP,3,30.0,Tier 3 — Nice to Have,Cloud / Platform,2026-03-31T23:59:15.870742
+Machine Learning,3,30.0,Tier 3 — Nice to Have,Analytics / Modeling,2026-03-31T23:59:15.870742
+Data Catalog,3,30.0,Tier 3 — Nice to Have,Governance,2026-03-31T23:59:15.870742
+Stakeholder,3,30.0,Tier 3 — Nice to Have,Analytics / Modeling,2026-03-31T23:59:15.870742
+ELT,2,20.0,Tier 3 — Nice to Have,Data Engineering,2026-03-31T23:59:15.870742
+Data Lake,2,20.0,Tier 3 — Nice to Have,Analytics / Modeling,2026-03-31T23:59:15.870742
+Data Lakehouse,2,20.0,Tier 3 — Nice to Have,Analytics / Modeling,2026-03-31T23:59:15.870742
+BigQuery,2,20.0,Tier 3 — Nice to Have,Cloud / Platform,2026-03-31T23:59:15.870742
+Spark,2,20.0,Tier 3 — Nice to Have,Data Engineering,2026-03-31T23:59:15.870742
+Lineage,2,20.0,Tier 3 — Nice to Have,Governance,2026-03-31T23:59:15.870742
+GDPR,2,20.0,Tier 3 — Nice to Have,Governance,2026-03-31T23:59:15.870742
+PostgreSQL,1,10.0,Tier 4 — Bonus,Analytics / Modeling,2026-03-31T23:59:15.870742
+R,1,10.0,Tier 4 — Bonus,Language / Query,2026-03-31T23:59:15.870742
+DAX,1,10.0,Tier 4 — Bonus,Language / Query,2026-03-31T23:59:15.870742
+SSRS,1,10.0,Tier 4 — Bonus,BI / Visualization,2026-03-31T23:59:15.870742
+Redshift,1,10.0,Tier 4 — Bonus,Cloud / Platform,2026-03-31T23:59:15.870742
+OLAP,1,10.0,Tier 4 — Bonus,Analytics / Modeling,2026-03-31T23:59:15.870742
+Dashboards,1,10.0,Tier 4 — Bonus,Analytics / Modeling,2026-03-31T23:59:15.870742
+Data Pipeline,1,10.0,Tier 4 — Bonus,Data Engineering,2026-03-31T23:59:15.870742
+Oracle,1,10.0,Tier 4 — Bonus,Analytics / Modeling,2026-03-31T23:59:15.870742
