@@ -16,7 +16,6 @@ import logging
 import os
 import sqlite3
 import pandas as pd
-from datetime import datetime
 
 # ── logging ────────────────────────────────────────────────────────────────────
 os.makedirs("logs", exist_ok=True)
