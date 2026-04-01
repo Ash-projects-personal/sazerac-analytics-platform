@@ -31,40 +31,48 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 # ── paths ──────────────────────────────────────────────────────────────────────
-RAW_DIR       = "data/raw"
+RAW_DIR = "data/raw"
 PROCESSED_DIR = "data/processed"
-MARTS_DIR     = "data/marts"
+MARTS_DIR = "data/marts"
 
 for d in [RAW_DIR, PROCESSED_DIR, MARTS_DIR]:
     os.makedirs(d, exist_ok=True)
 
 # ── category normalization map ─────────────────────────────────────────────────
 CATEGORY_MAP = {
-    "bourbon whiskey":    "Bourbon Whiskey",
-    "rye whiskey":        "Rye Whiskey",
-    "whiskey":            "Whiskey",
-    "whisky":             "Whiskey",
-    "flavored whisky":    "Flavored Whiskey",
-    "flavored whiskey":   "Flavored Whiskey",
-    "vodka":              "Vodka",
-    "rum":                "Rum",
-    "tequila":            "Tequila",
-    "mezcal":             "Mezcal",
-    "gin":                "Gin",
-    "brandy":             "Brandy",
-    "cognac":             "Brandy",
-    "liqueur":            "Liqueur",
-    "schnapps":           "Schnapps/Liqueur",
+    "bourbon whiskey": "Bourbon Whiskey",
+    "rye whiskey": "Rye Whiskey",
+    "whiskey": "Whiskey",
+    "whisky": "Whiskey",
+    "flavored whisky": "Flavored Whiskey",
+    "flavored whiskey": "Flavored Whiskey",
+    "vodka": "Vodka",
+    "rum": "Rum",
+    "tequila": "Tequila",
+    "mezcal": "Mezcal",
+    "gin": "Gin",
+    "brandy": "Brandy",
+    "cognac": "Brandy",
+    "liqueur": "Liqueur",
+    "schnapps": "Schnapps/Liqueur",
     "mixer / non-alcoholic": "Mixer",
-    "mixer":              "Mixer",
-    "beer":               "Beer",
-    "wine":               "Wine",
-    "unknown":            "Uncategorized",
+    "mixer": "Mixer",
+    "beer": "Beer",
+    "wine": "Wine",
+    "unknown": "Uncategorized",
 }
 
 SPIRITS_CATEGORIES = {
-    "Bourbon Whiskey", "Rye Whiskey", "Whiskey", "Flavored Whiskey",
-    "Vodka", "Rum", "Tequila", "Mezcal", "Gin", "Brandy",
+    "Bourbon Whiskey",
+    "Rye Whiskey",
+    "Whiskey",
+    "Flavored Whiskey",
+    "Vodka",
+    "Rum",
+    "Tequila",
+    "Mezcal",
+    "Gin",
+    "Brandy",
 }
 
 
@@ -72,20 +80,24 @@ SPIRITS_CATEGORIES = {
 # DATA QUALITY CHECKS
 # ══════════════════════════════════════════════════════════════════════════════
 
-def run_dq_checks(df: pd.DataFrame, table_name: str,
-                  required_cols: list[str], unique_cols: list[str] | None = None
-                  ) -> dict:
+
+def run_dq_checks(
+    df: pd.DataFrame,
+    table_name: str,
+    required_cols: list[str],
+    unique_cols: list[str] | None = None,
+) -> dict:
     """
     Standardized data quality check suite.
     Returns a dict of check results for logging and governance records.
     """
     results = {
-        "table":          table_name,
-        "checked_at":     datetime.utcnow().isoformat(),
-        "total_rows":     len(df),
-        "checks_passed":  0,
-        "checks_failed":  0,
-        "issues":         [],
+        "table": table_name,
+        "checked_at": datetime.utcnow().isoformat(),
+        "total_rows": len(df),
+        "checks_passed": 0,
+        "checks_failed": 0,
+        "issues": [],
     }
 
     def _pass(msg):
@@ -131,14 +143,19 @@ def run_dq_checks(df: pd.DataFrame, table_name: str,
             else:
                 _pass(f"No duplicates on {existing}")
 
-    log.info("[DQ SUMMARY] %s | Passed: %d | Failed: %d",
-             table_name, results["checks_passed"], results["checks_failed"])
+    log.info(
+        "[DQ SUMMARY] %s | Passed: %d | Failed: %d",
+        table_name,
+        results["checks_passed"],
+        results["checks_failed"],
+    )
     return results
 
 
 # ══════════════════════════════════════════════════════════════════════════════
 # BRONZE → SILVER: Brands
 # ══════════════════════════════════════════════════════════════════════════════
+
 
 def process_brands() -> pd.DataFrame:
     log.info("--- Processing Brands (Bronze → Silver) ---")
@@ -148,15 +165,11 @@ def process_brands() -> pd.DataFrame:
 
     # 1. Normalize text fields
     df["brand_name"] = df["brand_name"].str.strip().str.title()
-    df["category"]   = df["category"].str.strip()
+    df["category"] = df["category"].str.strip()
 
     # 2. Normalize categories using map
     df["category_clean"] = (
-        df["category"]
-        .str.lower()
-        .str.strip()
-        .map(CATEGORY_MAP)
-        .fillna("Uncategorized")
+        df["category"].str.lower().str.strip().map(CATEGORY_MAP).fillna("Uncategorized")
     )
 
     # 3. Classify as spirits vs non-spirits
@@ -175,12 +188,15 @@ def process_brands() -> pd.DataFrame:
 
     # 7. Add processing metadata
     df["processed_at"] = datetime.utcnow().isoformat()
-    df["data_source"]  = "sazerac.com (scraped/mock)"
+    df["data_source"] = "sazerac.com (scraped/mock)"
 
     # DQ checks
-    run_dq_checks(df, "dim_brand_silver",
-                  required_cols=["brand_name", "category_clean"],
-                  unique_cols=["brand_name"])
+    run_dq_checks(
+        df,
+        "dim_brand_silver",
+        required_cols=["brand_name", "category_clean"],
+        unique_cols=["brand_name"],
+    )
 
     out_path = f"{PROCESSED_DIR}/brands_clean.csv"
     df.to_csv(out_path, index=False)
@@ -192,6 +208,7 @@ def process_brands() -> pd.DataFrame:
 # BRONZE → SILVER: Locations
 # ══════════════════════════════════════════════════════════════════════════════
 
+
 def process_locations() -> pd.DataFrame:
     log.info("--- Processing Locations (Bronze → Silver) ---")
     path = f"{RAW_DIR}/locations_raw.csv"
@@ -199,19 +216,31 @@ def process_locations() -> pd.DataFrame:
     log.info("Loaded %d raw location records", len(df))
 
     # 1. Normalize
-    df["location_name"]  = df["location_name"].str.strip()
-    df["country"]        = df["country"].str.strip()
-    df["location_type"]  = df["location_type"].str.strip()
+    df["location_name"] = df["location_name"].str.strip()
+    df["country"] = df["country"].str.strip()
+    df["location_type"] = df["location_type"].str.strip()
 
     # 2. Fill missing regions
     region_map = {
-        "United States": "Americas", "Canada": "Americas", "Mexico": "Americas",
-        "Brazil": "Americas", "Argentina": "Americas",
-        "United Kingdom": "Europe", "Germany": "Europe", "France": "Europe",
-        "Italy": "Europe", "Spain": "Europe", "Netherlands": "Europe",
-        "Australia": "APAC", "Japan": "APAC", "China": "APAC",
-        "Singapore": "APAC", "South Korea": "APAC", "India": "APAC",
-        "South Africa": "EMEA", "UAE": "EMEA",
+        "United States": "Americas",
+        "Canada": "Americas",
+        "Mexico": "Americas",
+        "Brazil": "Americas",
+        "Argentina": "Americas",
+        "United Kingdom": "Europe",
+        "Germany": "Europe",
+        "France": "Europe",
+        "Italy": "Europe",
+        "Spain": "Europe",
+        "Netherlands": "Europe",
+        "Australia": "APAC",
+        "Japan": "APAC",
+        "China": "APAC",
+        "Singapore": "APAC",
+        "South Korea": "APAC",
+        "India": "APAC",
+        "South Africa": "EMEA",
+        "UAE": "EMEA",
     }
     df["region"] = df["country"].map(region_map).fillna("Other")
 
@@ -228,14 +257,16 @@ def process_locations() -> pd.DataFrame:
     )
 
     # 4. Validate lat/lon ranges
-    df["latitude"]  = pd.to_numeric(df["latitude"], errors="coerce")
+    df["latitude"] = pd.to_numeric(df["latitude"], errors="coerce")
     df["longitude"] = pd.to_numeric(df["longitude"], errors="coerce")
-    invalid_coords  = df[df["latitude"].isna() | df["longitude"].isna()]
+    invalid_coords = df[df["latitude"].isna() | df["longitude"].isna()]
     if len(invalid_coords) > 0:
         log.warning("Found %d records with invalid coordinates", len(invalid_coords))
 
     # 5. Employee count as int
-    df["employee_count"] = pd.to_numeric(df["employee_count"], errors="coerce").fillna(0).astype(int)
+    df["employee_count"] = (
+        pd.to_numeric(df["employee_count"], errors="coerce").fillna(0).astype(int)
+    )
 
     # 6. Remove duplicates
     before = len(df)
@@ -244,9 +275,12 @@ def process_locations() -> pd.DataFrame:
 
     df["processed_at"] = datetime.utcnow().isoformat()
 
-    run_dq_checks(df, "dim_location_silver",
-                  required_cols=["location_name", "country", "region"],
-                  unique_cols=["location_name"])
+    run_dq_checks(
+        df,
+        "dim_location_silver",
+        required_cols=["location_name", "country", "region"],
+        unique_cols=["location_name"],
+    )
 
     out_path = f"{PROCESSED_DIR}/locations_clean.csv"
     df.to_csv(out_path, index=False)
@@ -258,6 +292,7 @@ def process_locations() -> pd.DataFrame:
 # BRONZE → SILVER: Jobs
 # ══════════════════════════════════════════════════════════════════════════════
 
+
 def process_jobs() -> pd.DataFrame:
     log.info("--- Processing Jobs (Bronze → Silver) ---")
     path = f"{RAW_DIR}/jobs_raw.csv"
@@ -265,9 +300,9 @@ def process_jobs() -> pd.DataFrame:
     log.info("Loaded %d raw job records", len(df))
 
     # 1. Normalize
-    df["job_title"]      = df["job_title"].str.strip()
-    df["department"]     = df["department"].str.strip().fillna("Unknown")
-    df["location"]       = df["location"].str.strip().fillna("Louisville, KY")
+    df["job_title"] = df["job_title"].str.strip()
+    df["department"] = df["department"].str.strip().fillna("Unknown")
+    df["location"] = df["location"].str.strip().fillna("Louisville, KY")
     df["employment_type"] = df["employment_type"].str.strip().fillna("Full-Time")
 
     # 2. Parse posted_date
@@ -280,7 +315,7 @@ def process_jobs() -> pd.DataFrame:
     # 3. Extract state from location (e.g., "Louisville, KY" → "KY")
     df["state"] = df["location"].str.extract(r",\s*([A-Z]{2})\b")
     df["is_remote"] = df["location"].str.lower().str.contains("remote").fillna(False)
-    df["is_hybrid"]  = df["location"].str.lower().str.contains("hybrid").fillna(False)
+    df["is_hybrid"] = df["location"].str.lower().str.contains("hybrid").fillna(False)
 
     # 4. Skill count from extracted skills
     df["skills_extracted"] = df["skills_extracted"].fillna("").astype(str)
@@ -310,9 +345,9 @@ def process_jobs() -> pd.DataFrame:
 
     df["processed_at"] = datetime.utcnow().isoformat()
 
-    run_dq_checks(df, "fact_jobs_silver",
-                  required_cols=["job_title", "department"],
-                  unique_cols=["job_id"])
+    run_dq_checks(
+        df, "fact_jobs_silver", required_cols=["job_title", "department"], unique_cols=["job_id"]
+    )
 
     out_path = f"{PROCESSED_DIR}/jobs_clean.csv"
     df.to_csv(out_path, index=False)
@@ -326,39 +361,46 @@ def process_job_skills() -> pd.DataFrame:
     df = pd.read_csv(path)
     log.info("Loaded %d skill frequency records", len(df))
 
-    df["skill"]     = df["skill"].str.strip()
+    df["skill"] = df["skill"].str.strip()
     df["frequency"] = pd.to_numeric(df["frequency"], errors="coerce").fillna(0).astype(int)
     df["pct_of_postings"] = pd.to_numeric(df["pct_of_postings"], errors="coerce").fillna(0.0)
 
     # Tier classification
     def skill_tier(pct):
-        if pct >= 70:   return "Tier 1 — Must Have"
-        if pct >= 40:   return "Tier 2 — Strongly Preferred"
-        if pct >= 20:   return "Tier 3 — Nice to Have"
-        return              "Tier 4 — Bonus"
+        if pct >= 70:
+            return "Tier 1 — Must Have"
+        if pct >= 40:
+            return "Tier 2 — Strongly Preferred"
+        if pct >= 20:
+            return "Tier 3 — Nice to Have"
+        return "Tier 4 — Bonus"
 
     df["demand_tier"] = df["pct_of_postings"].apply(skill_tier)
 
     # Category classification
-    lang_skills  = {"SQL", "Python", "R", "Scala", "Java", "JavaScript", "DAX", "MDX"}
+    lang_skills = {"SQL", "Python", "R", "Scala", "Java", "JavaScript", "DAX", "MDX"}
     cloud_skills = {"Azure", "AWS", "GCP", "Snowflake", "Databricks", "Redshift", "BigQuery"}
-    bi_skills    = {"Power BI", "Tableau", "Looker", "Qlik", "Excel", "SSRS"}
-    de_skills    = {"ETL", "ELT", "dbt", "Airflow", "Spark", "Kafka", "Data Pipeline"}
-    gov_skills   = {"Data Governance", "Data Quality", "Data Catalog", "Lineage", "GDPR"}
+    bi_skills = {"Power BI", "Tableau", "Looker", "Qlik", "Excel", "SSRS"}
+    de_skills = {"ETL", "ELT", "dbt", "Airflow", "Spark", "Kafka", "Data Pipeline"}
+    gov_skills = {"Data Governance", "Data Quality", "Data Catalog", "Lineage", "GDPR"}
 
     def classify_skill(skill):
-        if skill in lang_skills:  return "Language / Query"
-        if skill in cloud_skills: return "Cloud / Platform"
-        if skill in bi_skills:    return "BI / Visualization"
-        if skill in de_skills:    return "Data Engineering"
-        if skill in gov_skills:   return "Governance"
+        if skill in lang_skills:
+            return "Language / Query"
+        if skill in cloud_skills:
+            return "Cloud / Platform"
+        if skill in bi_skills:
+            return "BI / Visualization"
+        if skill in de_skills:
+            return "Data Engineering"
+        if skill in gov_skills:
+            return "Governance"
         return "Analytics / Modeling"
 
     df["skill_category"] = df["skill"].apply(classify_skill)
-    df["processed_at"]   = datetime.utcnow().isoformat()
+    df["processed_at"] = datetime.utcnow().isoformat()
 
-    run_dq_checks(df, "fact_job_skills_silver",
-                  required_cols=["skill", "frequency"])
+    run_dq_checks(df, "fact_job_skills_silver", required_cols=["skill", "frequency"])
 
     out_path = f"{PROCESSED_DIR}/job_skills_clean.csv"
     df.to_csv(out_path, index=False)
@@ -370,15 +412,15 @@ def process_job_skills() -> pd.DataFrame:
 # SILVER → GOLD: Data Marts
 # ══════════════════════════════════════════════════════════════════════════════
 
+
 def build_brands_by_category(brands_df: pd.DataFrame) -> pd.DataFrame:
     """Gold mart: brand count and flagship count by category."""
     mart = (
-        brands_df
-        .groupby("category_clean", as_index=False)
+        brands_df.groupby("category_clean", as_index=False)
         .agg(
-            brand_count   = ("brand_name", "count"),
-            flagship_count= ("is_flagship", "sum"),
-            is_spirits    = ("is_spirits", "first"),
+            brand_count=("brand_name", "count"),
+            flagship_count=("is_flagship", "sum"),
+            is_spirits=("is_spirits", "first"),
         )
         .rename(columns={"category_clean": "category"})
         .sort_values("brand_count", ascending=False)
@@ -393,12 +435,11 @@ def build_brands_by_category(brands_df: pd.DataFrame) -> pd.DataFrame:
 def build_locations_by_region(loc_df: pd.DataFrame) -> pd.DataFrame:
     """Gold mart: location counts and employee totals by region and type."""
     mart = (
-        loc_df
-        .groupby(["region", "location_type_clean"], as_index=False)
+        loc_df.groupby(["region", "location_type_clean"], as_index=False)
         .agg(
-            location_count  = ("location_name", "count"),
-            total_employees = ("employee_count", "sum"),
-            country_count   = ("country", "nunique"),
+            location_count=("location_name", "count"),
+            total_employees=("employee_count", "sum"),
+            country_count=("country", "nunique"),
         )
         .sort_values(["region", "location_count"], ascending=[True, False])
     )
@@ -417,43 +458,109 @@ def build_skill_frequency_mart(skills_df: pd.DataFrame) -> pd.DataFrame:
     return mart
 
 
-def build_portfolio_summary(brands_df: pd.DataFrame, loc_df: pd.DataFrame,
-                             jobs_df: pd.DataFrame, skills_df: pd.DataFrame) -> pd.DataFrame:
+def build_portfolio_summary(
+    brands_df: pd.DataFrame, loc_df: pd.DataFrame, jobs_df: pd.DataFrame, skills_df: pd.DataFrame
+) -> pd.DataFrame:
     """Gold mart: executive KPI summary."""
     kpis = [
-        {"kpi_name": "Total Brands",              "kpi_value": len(brands_df),
-         "kpi_category": "Portfolio",             "display_format": "number"},
-        {"kpi_name": "Flagship Brands",           "kpi_value": int(brands_df["is_flagship"].sum()),
-         "kpi_category": "Portfolio",             "display_format": "number"},
-        {"kpi_name": "Brand Categories",          "kpi_value": brands_df["category_clean"].nunique(),
-         "kpi_category": "Portfolio",             "display_format": "number"},
-        {"kpi_name": "Spirits Brands (%)",        "kpi_value": round(brands_df["is_spirits"].mean()*100, 1),
-         "kpi_category": "Portfolio",             "display_format": "pct"},
-        {"kpi_name": "Total Locations",           "kpi_value": len(loc_df),
-         "kpi_category": "Global Presence",       "display_format": "number"},
-        {"kpi_name": "Countries Served",          "kpi_value": loc_df["country"].nunique(),
-         "kpi_category": "Global Presence",       "display_format": "number"},
-        {"kpi_name": "Total Employees (Est.)",    "kpi_value": int(loc_df["employee_count"].sum()),
-         "kpi_category": "Global Presence",       "display_format": "number"},
-        {"kpi_name": "US Locations",              "kpi_value": int((loc_df["country"]=="United States").sum()),
-         "kpi_category": "Global Presence",       "display_format": "number"},
-        {"kpi_name": "International Locations",   "kpi_value": int((loc_df["country"]!="United States").sum()),
-         "kpi_category": "Global Presence",       "display_format": "number"},
-        {"kpi_name": "Open Job Postings",         "kpi_value": len(jobs_df),
-         "kpi_category": "Talent",                "display_format": "number"},
-        {"kpi_name": "Remote Positions",          "kpi_value": int(jobs_df["is_remote"].sum()),
-         "kpi_category": "Talent",                "display_format": "number"},
-        {"kpi_name": "Hybrid Positions",          "kpi_value": int(jobs_df["is_hybrid"].sum()),
-         "kpi_category": "Talent",                "display_format": "number"},
-        {"kpi_name": "Avg Skills/Posting",        "kpi_value": round(jobs_df["skill_count"].mean(), 1),
-         "kpi_category": "Talent",                "display_format": "number"},
-        {"kpi_name": "Unique Skills Required",    "kpi_value": len(skills_df),
-         "kpi_category": "Talent",                "display_format": "number"},
-        {"kpi_name": "Top Required Skill",        "kpi_value": skills_df.iloc[0]["skill"] if len(skills_df) else "N/A",
-         "kpi_category": "Talent",                "display_format": "text"},
-        {"kpi_name": "Data Roles (%)",            "kpi_value": round(
-            jobs_df["department"].str.lower().str.contains("data|analytics|bi").mean() * 100, 1),
-         "kpi_category": "Talent",                "display_format": "pct"},
+        {
+            "kpi_name": "Total Brands",
+            "kpi_value": len(brands_df),
+            "kpi_category": "Portfolio",
+            "display_format": "number",
+        },
+        {
+            "kpi_name": "Flagship Brands",
+            "kpi_value": int(brands_df["is_flagship"].sum()),
+            "kpi_category": "Portfolio",
+            "display_format": "number",
+        },
+        {
+            "kpi_name": "Brand Categories",
+            "kpi_value": brands_df["category_clean"].nunique(),
+            "kpi_category": "Portfolio",
+            "display_format": "number",
+        },
+        {
+            "kpi_name": "Spirits Brands (%)",
+            "kpi_value": round(brands_df["is_spirits"].mean() * 100, 1),
+            "kpi_category": "Portfolio",
+            "display_format": "pct",
+        },
+        {
+            "kpi_name": "Total Locations",
+            "kpi_value": len(loc_df),
+            "kpi_category": "Global Presence",
+            "display_format": "number",
+        },
+        {
+            "kpi_name": "Countries Served",
+            "kpi_value": loc_df["country"].nunique(),
+            "kpi_category": "Global Presence",
+            "display_format": "number",
+        },
+        {
+            "kpi_name": "Total Employees (Est.)",
+            "kpi_value": int(loc_df["employee_count"].sum()),
+            "kpi_category": "Global Presence",
+            "display_format": "number",
+        },
+        {
+            "kpi_name": "US Locations",
+            "kpi_value": int((loc_df["country"] == "United States").sum()),
+            "kpi_category": "Global Presence",
+            "display_format": "number",
+        },
+        {
+            "kpi_name": "International Locations",
+            "kpi_value": int((loc_df["country"] != "United States").sum()),
+            "kpi_category": "Global Presence",
+            "display_format": "number",
+        },
+        {
+            "kpi_name": "Open Job Postings",
+            "kpi_value": len(jobs_df),
+            "kpi_category": "Talent",
+            "display_format": "number",
+        },
+        {
+            "kpi_name": "Remote Positions",
+            "kpi_value": int(jobs_df["is_remote"].sum()),
+            "kpi_category": "Talent",
+            "display_format": "number",
+        },
+        {
+            "kpi_name": "Hybrid Positions",
+            "kpi_value": int(jobs_df["is_hybrid"].sum()),
+            "kpi_category": "Talent",
+            "display_format": "number",
+        },
+        {
+            "kpi_name": "Avg Skills/Posting",
+            "kpi_value": round(jobs_df["skill_count"].mean(), 1),
+            "kpi_category": "Talent",
+            "display_format": "number",
+        },
+        {
+            "kpi_name": "Unique Skills Required",
+            "kpi_value": len(skills_df),
+            "kpi_category": "Talent",
+            "display_format": "number",
+        },
+        {
+            "kpi_name": "Top Required Skill",
+            "kpi_value": skills_df.iloc[0]["skill"] if len(skills_df) else "N/A",
+            "kpi_category": "Talent",
+            "display_format": "text",
+        },
+        {
+            "kpi_name": "Data Roles (%)",
+            "kpi_value": round(
+                jobs_df["department"].str.lower().str.contains("data|analytics|bi").mean() * 100, 1
+            ),
+            "kpi_category": "Talent",
+            "display_format": "pct",
+        },
     ]
 
     mart = pd.DataFrame(kpis)
@@ -468,6 +575,7 @@ def build_portfolio_summary(brands_df: pd.DataFrame, loc_df: pd.DataFrame,
 # DASHBOARD EXPORT CSVs (Power BI ready)
 # ══════════════════════════════════════════════════════════════════════════════
 
+
 def build_dashboard_exports(brands_df, loc_df, jobs_df, skills_df):
     """Build additional analytics views for Power BI / dashboard consumption."""
     os.makedirs("dashboard_exports", exist_ok=True)
@@ -475,21 +583,45 @@ def build_dashboard_exports(brands_df, loc_df, jobs_df, skills_df):
     # 1. Category distribution (pie/donut)
     cat_dist = brands_df.groupby("category_clean")["brand_name"].count().reset_index()
     cat_dist.columns = ["Category", "Brand Count"]
-    cat_dist["% of Portfolio"] = (cat_dist["Brand Count"] / cat_dist["Brand Count"].sum() * 100).round(1)
+    cat_dist["% of Portfolio"] = (
+        cat_dist["Brand Count"] / cat_dist["Brand Count"].sum() * 100
+    ).round(1)
     cat_dist.sort_values("Brand Count", ascending=False, inplace=True)
     cat_dist.to_csv("dashboard_exports/category_distribution.csv", index=False)
     log.info("Dashboard export: category_distribution")
 
     # 2. Geographic map data
-    geo = loc_df[["location_name", "city", "state_province", "country", "region",
-                   "location_type_clean", "latitude", "longitude", "employee_count"]].copy()
-    geo.columns = ["Location", "City", "State", "Country", "Region",
-                   "Type", "Latitude", "Longitude", "Employees"]
+    geo = loc_df[
+        [
+            "location_name",
+            "city",
+            "state_province",
+            "country",
+            "region",
+            "location_type_clean",
+            "latitude",
+            "longitude",
+            "employee_count",
+        ]
+    ].copy()
+    geo.columns = [
+        "Location",
+        "City",
+        "State",
+        "Country",
+        "Region",
+        "Type",
+        "Latitude",
+        "Longitude",
+        "Employees",
+    ]
     geo.to_csv("dashboard_exports/geographic_map.csv", index=False)
     log.info("Dashboard export: geographic_map")
 
     # 3. Skill demand chart (top 20)
-    skill_chart = skills_df.head(20)[["skill", "frequency", "pct_of_postings", "skill_category", "demand_tier"]].copy()
+    skill_chart = skills_df.head(20)[
+        ["skill", "frequency", "pct_of_postings", "skill_category", "demand_tier"]
+    ].copy()
     skill_chart.columns = ["Skill", "Frequency", "% of Postings", "Category", "Demand Tier"]
     skill_chart.to_csv("dashboard_exports/skill_demand.csv", index=False)
     log.info("Dashboard export: skill_demand")
@@ -507,11 +639,13 @@ def build_dashboard_exports(brands_df, loc_df, jobs_df, skills_df):
     # 5. Region summary (bar)
     region_sum = (
         loc_df.groupby("region")
-        .agg(Locations=("location_name","count"),
-             Employees=("employee_count","sum"),
-             Countries=("country","nunique"))
+        .agg(
+            Locations=("location_name", "count"),
+            Employees=("employee_count", "sum"),
+            Countries=("country", "nunique"),
+        )
         .reset_index()
-        .rename(columns={"region":"Region"})
+        .rename(columns={"region": "Region"})
     )
     region_sum.to_csv("dashboard_exports/region_summary.csv", index=False)
     log.info("Dashboard export: region_summary")
@@ -523,14 +657,15 @@ def build_dashboard_exports(brands_df, loc_df, jobs_df, skills_df):
 # MAIN
 # ══════════════════════════════════════════════════════════════════════════════
 
+
 def main():
     log.info("========== ETL Pipeline Starting ==========")
 
     # Bronze → Silver
-    brands_df  = process_brands()
-    loc_df     = process_locations()
-    jobs_df    = process_jobs()
-    skills_df  = process_job_skills()
+    brands_df = process_brands()
+    loc_df = process_locations()
+    jobs_df = process_jobs()
+    skills_df = process_job_skills()
 
     # Silver → Gold Marts
     build_brands_by_category(brands_df)

@@ -30,9 +30,9 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-DB_PATH       = "data/sazerac_analytics.db"
+DB_PATH = "data/sazerac_analytics.db"
 PROCESSED_DIR = "data/processed"
-MARTS_DIR     = "data/marts"
+MARTS_DIR = "data/marts"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # SCHEMA
@@ -240,6 +240,7 @@ SELECT 'Unique Skills Tracked',        COUNT(*),                      'Talent'  
 # LOAD FUNCTIONS
 # ══════════════════════════════════════════════════════════════════════════════
 
+
 def get_connection() -> sqlite3.Connection:
     conn = sqlite3.connect(DB_PATH)
     conn.execute("PRAGMA journal_mode=WAL;")
@@ -277,27 +278,30 @@ def load_brands(conn: sqlite3.Connection) -> int:
 
     conn.execute("DELETE FROM dim_brand")
     for _, row in df.iterrows():
-        conn.execute("""
+        conn.execute(
+            """
             INSERT OR REPLACE INTO dim_brand
             (brand_id, brand_name, category, category_raw, description,
              description_short, url, is_flagship, is_spirits, has_description,
              data_source, processed_at, scraped_at)
             VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
-        """, (
-            int(row.get("brand_id", 0)),
-            str(row.get("brand_name", "")),
-            str(row.get("category_clean", row.get("category", ""))),
-            str(row.get("category", "")),
-            str(row.get("description", "")),
-            str(row.get("description_short", "")),
-            str(row.get("url", "")),
-            int(row.get("is_flagship", 0)),
-            int(row.get("is_spirits", 1)),
-            int(row.get("has_description", 0)),
-            str(row.get("data_source", "")),
-            str(row.get("processed_at", "")),
-            str(row.get("scraped_at", "")),
-        ))
+        """,
+            (
+                int(row.get("brand_id", 0)),
+                str(row.get("brand_name", "")),
+                str(row.get("category_clean", row.get("category", ""))),
+                str(row.get("category", "")),
+                str(row.get("description", "")),
+                str(row.get("description_short", "")),
+                str(row.get("url", "")),
+                int(row.get("is_flagship", 0)),
+                int(row.get("is_spirits", 1)),
+                int(row.get("has_description", 0)),
+                str(row.get("data_source", "")),
+                str(row.get("processed_at", "")),
+                str(row.get("scraped_at", "")),
+            ),
+        )
     conn.commit()
     log.info("dim_brand loaded: %d records", len(df))
     return len(df)
@@ -310,27 +314,30 @@ def load_locations(conn: sqlite3.Connection) -> int:
 
     conn.execute("DELETE FROM dim_location")
     for _, row in df.iterrows():
-        conn.execute("""
+        conn.execute(
+            """
             INSERT OR REPLACE INTO dim_location
             (location_id, location_name, city, state_province, country, region,
              location_type, latitude, longitude, year_established, employee_count,
              processed_at, scraped_at)
             VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
-        """, (
-            int(row.get("location_id", 0)),
-            str(row.get("location_name", "")),
-            str(row.get("city", "")),
-            str(row.get("state_province", "")),
-            str(row.get("country", "")),
-            str(row.get("region", "")),
-            str(row.get("location_type_clean", row.get("location_type", ""))),
-            float(row["latitude"]) if pd.notna(row.get("latitude")) else None,
-            float(row["longitude"]) if pd.notna(row.get("longitude")) else None,
-            int(row["year_established"]) if pd.notna(row.get("year_established")) else None,
-            int(row.get("employee_count", 0)),
-            str(row.get("processed_at", "")),
-            str(row.get("scraped_at", "")),
-        ))
+        """,
+            (
+                int(row.get("location_id", 0)),
+                str(row.get("location_name", "")),
+                str(row.get("city", "")),
+                str(row.get("state_province", "")),
+                str(row.get("country", "")),
+                str(row.get("region", "")),
+                str(row.get("location_type_clean", row.get("location_type", ""))),
+                float(row["latitude"]) if pd.notna(row.get("latitude")) else None,
+                float(row["longitude"]) if pd.notna(row.get("longitude")) else None,
+                int(row["year_established"]) if pd.notna(row.get("year_established")) else None,
+                int(row.get("employee_count", 0)),
+                str(row.get("processed_at", "")),
+                str(row.get("scraped_at", "")),
+            ),
+        )
     conn.commit()
     log.info("dim_location loaded: %d records", len(df))
     return len(df)
@@ -343,29 +350,32 @@ def load_jobs(conn: sqlite3.Connection) -> int:
 
     conn.execute("DELETE FROM fact_jobs")
     for _, row in df.iterrows():
-        conn.execute("""
+        conn.execute(
+            """
             INSERT OR REPLACE INTO fact_jobs
             (job_id, job_title, department, location, state, is_remote, is_hybrid,
              employment_type, posted_date, seniority, skill_count, skills_extracted,
              description, processed_at, scraped_at)
             VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-        """, (
-            int(row.get("job_id", 0)),
-            str(row.get("job_title", "")),
-            str(row.get("department", "")),
-            str(row.get("location", "")),
-            str(row.get("state", "")) if pd.notna(row.get("state")) else "",
-            int(row.get("is_remote", 0)),
-            int(row.get("is_hybrid", 0)),
-            str(row.get("employment_type", "Full-Time")),
-            str(row.get("posted_date", "")),
-            str(row.get("seniority", "")),
-            int(row.get("skill_count", 0)),
-            str(row.get("skills_extracted", "")),
-            str(row.get("description", ""))[:2000],  # cap at 2000 chars
-            str(row.get("processed_at", "")),
-            str(row.get("scraped_at", "")),
-        ))
+        """,
+            (
+                int(row.get("job_id", 0)),
+                str(row.get("job_title", "")),
+                str(row.get("department", "")),
+                str(row.get("location", "")),
+                str(row.get("state", "")) if pd.notna(row.get("state")) else "",
+                int(row.get("is_remote", 0)),
+                int(row.get("is_hybrid", 0)),
+                str(row.get("employment_type", "Full-Time")),
+                str(row.get("posted_date", "")),
+                str(row.get("seniority", "")),
+                int(row.get("skill_count", 0)),
+                str(row.get("skills_extracted", "")),
+                str(row.get("description", ""))[:2000],  # cap at 2000 chars
+                str(row.get("processed_at", "")),
+                str(row.get("scraped_at", "")),
+            ),
+        )
     conn.commit()
     log.info("fact_jobs loaded: %d records", len(df))
     return len(df)
@@ -378,18 +388,21 @@ def load_job_skills(conn: sqlite3.Connection) -> int:
 
     conn.execute("DELETE FROM fact_job_skills")
     for _, row in df.iterrows():
-        conn.execute("""
+        conn.execute(
+            """
             INSERT OR REPLACE INTO fact_job_skills
             (skill, frequency, pct_of_postings, demand_tier, skill_category, processed_at)
             VALUES (?,?,?,?,?,?)
-        """, (
-            str(row.get("skill", "")),
-            int(row.get("frequency", 0)),
-            float(row.get("pct_of_postings", 0.0)),
-            str(row.get("demand_tier", "")),
-            str(row.get("skill_category", "")),
-            str(row.get("processed_at", "")),
-        ))
+        """,
+            (
+                str(row.get("skill", "")),
+                int(row.get("frequency", 0)),
+                float(row.get("pct_of_postings", 0.0)),
+                str(row.get("demand_tier", "")),
+                str(row.get("skill_category", "")),
+                str(row.get("processed_at", "")),
+            ),
+        )
     conn.commit()
     log.info("fact_job_skills loaded: %d records", len(df))
     return len(df)
@@ -399,14 +412,17 @@ def validate_db(conn: sqlite3.Connection) -> None:
     """Run post-load validation queries."""
     log.info("Running post-load DB validation...")
     checks = [
-        ("dim_brand row count",       "SELECT COUNT(*) FROM dim_brand"),
-        ("dim_location row count",    "SELECT COUNT(*) FROM dim_location"),
-        ("fact_jobs row count",       "SELECT COUNT(*) FROM fact_jobs"),
+        ("dim_brand row count", "SELECT COUNT(*) FROM dim_brand"),
+        ("dim_location row count", "SELECT COUNT(*) FROM dim_location"),
+        ("fact_jobs row count", "SELECT COUNT(*) FROM fact_jobs"),
         ("fact_job_skills row count", "SELECT COUNT(*) FROM fact_job_skills"),
-        ("Brands by category (top 3)","SELECT category, brand_count FROM brands_by_category LIMIT 3"),
-        ("Locations by region",       "SELECT region, location_count FROM locations_by_region LIMIT 5"),
-        ("Top 5 skills",              "SELECT skill, frequency FROM job_skill_frequency LIMIT 5"),
-        ("KPI summary",               "SELECT kpi, value FROM portfolio_summary LIMIT 5"),
+        (
+            "Brands by category (top 3)",
+            "SELECT category, brand_count FROM brands_by_category LIMIT 3",
+        ),
+        ("Locations by region", "SELECT region, location_count FROM locations_by_region LIMIT 5"),
+        ("Top 5 skills", "SELECT skill, frequency FROM job_skill_frequency LIMIT 5"),
+        ("KPI summary", "SELECT kpi, value FROM portfolio_summary LIMIT 5"),
     ]
     for label, sql in checks:
         try:
@@ -419,12 +435,12 @@ def validate_db(conn: sqlite3.Connection) -> None:
 def export_views_to_csv(conn: sqlite3.Connection) -> None:
     """Export key views to marts CSVs for reporting."""
     exports = {
-        "brands_by_category":    "SELECT * FROM brands_by_category",
-        "locations_by_region":   "SELECT * FROM locations_by_region",
-        "job_skill_frequency":   "SELECT * FROM job_skill_frequency",
-        "top_requested_tools":   "SELECT * FROM top_requested_tools",
-        "jobs_by_department":    "SELECT * FROM jobs_by_department",
-        "portfolio_summary":     "SELECT * FROM portfolio_summary",
+        "brands_by_category": "SELECT * FROM brands_by_category",
+        "locations_by_region": "SELECT * FROM locations_by_region",
+        "job_skill_frequency": "SELECT * FROM job_skill_frequency",
+        "top_requested_tools": "SELECT * FROM top_requested_tools",
+        "jobs_by_department": "SELECT * FROM jobs_by_department",
+        "portfolio_summary": "SELECT * FROM portfolio_summary",
     }
     os.makedirs(MARTS_DIR, exist_ok=True)
     for name, sql in exports.items():

@@ -21,6 +21,7 @@ from datetime import datetime
 try:
     import requests
     from bs4 import BeautifulSoup
+
     SCRAPING_AVAILABLE = True
 except ImportError:
     SCRAPING_AVAILABLE = False
@@ -37,80 +38,73 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-JOBS_OUTPUT       = "data/raw/jobs_raw.csv"
-SKILLS_OUTPUT     = "data/raw/job_skills.csv"
+JOBS_OUTPUT = "data/raw/jobs_raw.csv"
+SKILLS_OUTPUT = "data/raw/job_skills.csv"
 
 # ── skill taxonomy ──────────────────────────────────────────────────────────────
 SKILL_PATTERNS = {
     # Languages
-    "SQL":           r"\bSQL\b",
-    "Python":        r"\bPython\b",
-    "R":             r"\b(R programming|R language|\bR\b(?= skills| for))",
-    "Scala":         r"\bScala\b",
-    "Java":          r"\bJava\b(?!Script)",
-    "JavaScript":    r"\bJavaScript\b",
-    "DAX":           r"\bDAX\b",
-    "MDX":           r"\bMDX\b",
-
+    "SQL": r"\bSQL\b",
+    "Python": r"\bPython\b",
+    "R": r"\b(R programming|R language|\bR\b(?= skills| for))",
+    "Scala": r"\bScala\b",
+    "Java": r"\bJava\b(?!Script)",
+    "JavaScript": r"\bJavaScript\b",
+    "DAX": r"\bDAX\b",
+    "MDX": r"\bMDX\b",
     # BI & Visualization
-    "Power BI":      r"\bPower BI\b",
-    "Tableau":       r"\bTableau\b",
-    "Looker":        r"\bLooker\b",
-    "Qlik":          r"\bQlik(View|Sense)?\b",
-    "Excel":         r"\bExcel\b",
-    "SSRS":          r"\bSSRS\b",
-
+    "Power BI": r"\bPower BI\b",
+    "Tableau": r"\bTableau\b",
+    "Looker": r"\bLooker\b",
+    "Qlik": r"\bQlik(View|Sense)?\b",
+    "Excel": r"\bExcel\b",
+    "SSRS": r"\bSSRS\b",
     # Cloud
-    "Azure":         r"\bAzure\b",
-    "AWS":           r"\b(AWS|Amazon Web Services)\b",
-    "GCP":           r"\b(GCP|Google Cloud)\b",
-    "Snowflake":     r"\bSnowflake\b",
-    "Databricks":    r"\bDatabricks\b",
-    "Redshift":      r"\bRedshift\b",
-    "BigQuery":      r"\bBigQuery\b",
-
+    "Azure": r"\bAzure\b",
+    "AWS": r"\b(AWS|Amazon Web Services)\b",
+    "GCP": r"\b(GCP|Google Cloud)\b",
+    "Snowflake": r"\bSnowflake\b",
+    "Databricks": r"\bDatabricks\b",
+    "Redshift": r"\bRedshift\b",
+    "BigQuery": r"\bBigQuery\b",
     # Data Engineering
-    "ETL":           r"\bETL\b",
-    "ELT":           r"\bELT\b",
-    "dbt":           r"\bdbt\b",
-    "Airflow":       r"\b(Airflow|Apache Airflow)\b",
-    "Spark":         r"\b(Spark|PySpark|Apache Spark)\b",
-    "Kafka":         r"\bKafka\b",
-    "dbt":           r"\bdbt\b",
-
+    "ETL": r"\bETL\b",
+    "ELT": r"\bELT\b",
+    "dbt": r"\bdbt\b",
+    "Airflow": r"\b(Airflow|Apache Airflow)\b",
+    "Spark": r"\b(Spark|PySpark|Apache Spark)\b",
+    "Kafka": r"\bKafka\b",
+    "dbt": r"\bdbt\b",
     # Databases
-    "SQL Server":    r"\b(SQL Server|MSSQL|Microsoft SQL)\b",
-    "PostgreSQL":    r"\b(PostgreSQL|Postgres)\b",
-    "MySQL":         r"\bMySQL\b",
-    "Oracle":        r"\bOracle\b",
-    "DuckDB":        r"\bDuckDB\b",
-    "Teradata":      r"\bTeradata\b",
-
+    "SQL Server": r"\b(SQL Server|MSSQL|Microsoft SQL)\b",
+    "PostgreSQL": r"\b(PostgreSQL|Postgres)\b",
+    "MySQL": r"\bMySQL\b",
+    "Oracle": r"\bOracle\b",
+    "DuckDB": r"\bDuckDB\b",
+    "Teradata": r"\bTeradata\b",
     # Modeling & Analytics
     "Data Modeling": r"\bdata model(ing|er)?\b",
     "Data Warehouse": r"\bdata\s+warehouse\b",
-    "Data Lake":     r"\bdata\s+lake\b",
+    "Data Lake": r"\bdata\s+lake\b",
     "Data Lakehouse": r"\bdata\s+lakehouse\b",
-    "Star Schema":   r"\bstar\s+schema\b",
-    "OLAP":          r"\bOLAP\b",
+    "Star Schema": r"\bstar\s+schema\b",
+    "OLAP": r"\bOLAP\b",
     "Dimensional Modeling": r"\bdimensional\s+model(ing)?\b",
     "Machine Learning": r"\b(machine learning|ML\b)",
-    "Statistics":    r"\b(statistics|statistical analysis)\b",
-
+    "Statistics": r"\b(statistics|statistical analysis)\b",
     # Governance
     "Data Governance": r"\bdata\s+governance\b",
-    "Data Quality":  r"\bdata\s+quality\b",
-    "Data Catalog":  r"\bdata\s+catalog\b",
-    "Lineage":       r"\bdata\s+lineage\b",
-    "GDPR":          r"\bGDPR\b",
-
+    "Data Quality": r"\bdata\s+quality\b",
+    "Data Catalog": r"\bdata\s+catalog\b",
+    "Lineage": r"\bdata\s+lineage\b",
+    "GDPR": r"\bGDPR\b",
     # Soft / Process
-    "Agile":         r"\b(Agile|Scrum|Kanban)\b",
-    "Stakeholder":   r"\bstakeholder\b",
-    "KPIs":          r"\b(KPI|KPIs|key performance indicators?)\b",
+    "Agile": r"\b(Agile|Scrum|Kanban)\b",
+    "Stakeholder": r"\bstakeholder\b",
+    "KPIs": r"\b(KPI|KPIs|key performance indicators?)\b",
     "Data Pipeline": r"\bdata\s+pipeline\b",
-    "Dashboards":    r"\bdashboard\b",
-    "Reporting":     r"\b(reporting|reports?)\b",
+    "Dashboards": r"\bdashboard\b",
+    "Reporting": r"\b(reporting|reports?)\b",
     "Business Intelligence": r"\b(business intelligence|BI\b)",
 }
 
@@ -294,19 +288,21 @@ def get_jobs() -> list[dict]:
             jobs = []
             for card in soup.select(".job-listing, .career-item, article.job"):
                 title_el = card.select_one("h2, h3, .job-title")
-                dept_el  = card.select_one(".department, .team")
-                loc_el   = card.select_one(".location, .job-location")
-                desc_el  = card.select_one("p, .description")
+                dept_el = card.select_one(".department, .team")
+                loc_el = card.select_one(".location, .job-location")
+                desc_el = card.select_one("p, .description")
 
                 if title_el:
-                    jobs.append({
-                        "job_title":       title_el.get_text(strip=True),
-                        "department":      dept_el.get_text(strip=True) if dept_el else "Unknown",
-                        "location":        loc_el.get_text(strip=True) if loc_el else "Louisville, KY",
-                        "employment_type": "Full-Time",
-                        "posted_date":     datetime.utcnow().date().isoformat(),
-                        "description":     desc_el.get_text(strip=True) if desc_el else "",
-                    })
+                    jobs.append(
+                        {
+                            "job_title": title_el.get_text(strip=True),
+                            "department": dept_el.get_text(strip=True) if dept_el else "Unknown",
+                            "location": loc_el.get_text(strip=True) if loc_el else "Louisville, KY",
+                            "employment_type": "Full-Time",
+                            "posted_date": datetime.utcnow().date().isoformat(),
+                            "description": desc_el.get_text(strip=True) if desc_el else "",
+                        }
+                    )
 
             if len(jobs) >= 3:
                 log.info("Live scrape returned %d jobs", len(jobs))
@@ -320,26 +316,36 @@ def get_jobs() -> list[dict]:
 
 def save_jobs(jobs: list[dict], path: str) -> None:
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    fieldnames = ["job_id", "job_title", "department", "location",
-                  "employment_type", "posted_date", "description",
-                  "skills_extracted", "scraped_at"]
+    fieldnames = [
+        "job_id",
+        "job_title",
+        "department",
+        "location",
+        "employment_type",
+        "posted_date",
+        "description",
+        "skills_extracted",
+        "scraped_at",
+    ]
     ts = datetime.utcnow().isoformat()
     with open(path, "w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=fieldnames)
         writer.writeheader()
         for idx, job in enumerate(jobs, start=1):
             skills = extract_skills(job.get("description", ""))
-            writer.writerow({
-                "job_id":          idx,
-                "job_title":       job.get("job_title", "").strip(),
-                "department":      job.get("department", "").strip(),
-                "location":        job.get("location", "").strip(),
-                "employment_type": job.get("employment_type", "").strip(),
-                "posted_date":     job.get("posted_date", "").strip(),
-                "description":     job.get("description", "").strip(),
-                "skills_extracted": "|".join(skills),
-                "scraped_at":      ts,
-            })
+            writer.writerow(
+                {
+                    "job_id": idx,
+                    "job_title": job.get("job_title", "").strip(),
+                    "department": job.get("department", "").strip(),
+                    "location": job.get("location", "").strip(),
+                    "employment_type": job.get("employment_type", "").strip(),
+                    "posted_date": job.get("posted_date", "").strip(),
+                    "description": job.get("description", "").strip(),
+                    "skills_extracted": "|".join(skills),
+                    "scraped_at": ts,
+                }
+            )
     log.info("Saved %d jobs → %s", len(jobs), path)
 
 
@@ -353,11 +359,13 @@ def build_skills_frequency(jobs: list[dict], path: str) -> None:
         skills = extract_skills(desc)
         counter.update(skills)
         for skill in skills:
-            job_skill_rows.append({
-                "job_id":    idx,
-                "job_title": job.get("job_title", ""),
-                "skill":     skill,
-            })
+            job_skill_rows.append(
+                {
+                    "job_id": idx,
+                    "job_title": job.get("job_title", ""),
+                    "skill": skill,
+                }
+            )
 
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", newline="", encoding="utf-8") as fh:
@@ -365,14 +373,15 @@ def build_skills_frequency(jobs: list[dict], path: str) -> None:
         writer.writeheader()
         total_jobs = len(jobs)
         for skill, freq in counter.most_common():
-            writer.writerow({
-                "skill":           skill,
-                "frequency":       freq,
-                "pct_of_postings": round(freq / total_jobs * 100, 1),
-            })
+            writer.writerow(
+                {
+                    "skill": skill,
+                    "frequency": freq,
+                    "pct_of_postings": round(freq / total_jobs * 100, 1),
+                }
+            )
 
-    log.info("Saved skill frequency table (%d unique skills) → %s",
-             len(counter), path)
+    log.info("Saved skill frequency table (%d unique skills) → %s", len(counter), path)
 
     # Also save job-skill mapping for fact table
     mapping_path = path.replace("job_skills.csv", "job_skill_mapping.csv")
