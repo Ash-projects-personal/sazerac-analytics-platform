@@ -1,46 +1,38 @@
-# 🚀 Publish to GitHub — One-Time Setup
+# 🚀 GitHub Setup & Deployment Guide
 
-## Step 1: Create the GitHub repository
-
-Go to **https://github.com/new** and create a new repo:
-- **Name:** `sazerac-analytics-platform`
-- **Description:** `End-to-end data analytics pipeline & BI dashboard — Sazerac Company`
-- **Visibility:** Public (required for GitHub Pages)
-- **Do NOT** initialize with README, .gitignore, or license (the repo already has these)
-
-## Step 2: Push from your machine
-
-Run these 3 commands in your terminal, replacing `YOUR_USERNAME`:
+## Push to GitHub (3 commands)
 
 ```bash
-# Add the remote (do this once)
+# 1. Create a new repo on github.com named: sazerac-analytics-platform
+#    (public, no README, no .gitignore)
+
+# 2. Add your remote and push
 git remote add origin https://github.com/YOUR_USERNAME/sazerac-analytics-platform.git
-
-# Push everything
 git push -u origin main
+
+# 3. Done — GitHub Actions runs automatically on push
 ```
 
-## Step 3: Enable GitHub Pages
+## Enable GitHub Pages (live dashboard)
 
-1. Go to your repo → **Settings** → **Pages**
-2. Under **Source**, select **GitHub Actions**
-3. The CI/CD workflow at `.github/workflows/pipeline.yml` will automatically:
-   - Run the full ETL pipeline
-   - Generate the dashboard
-   - Deploy it to `https://YOUR_USERNAME.github.io/sazerac-analytics-platform/`
+1. Go to **Settings → Pages** in your repo
+2. Source: **GitHub Actions**
+3. Your dashboard will be live at:
+   `https://YOUR_USERNAME.github.io/sazerac-analytics-platform/`
 
-## Step 4: Run the pipeline locally
+## What the CI/CD Pipeline Does
+
+On every push to `main`, GitHub Actions:
+1. **Lints** — runs `black` and `ruff` on all Python files
+2. **Runs pipeline** — scrapes, processes, builds DB, generates dashboard
+3. **Validates** — checks all 4 warehouse tables have rows
+4. **Deploys** — publishes dashboard to GitHub Pages automatically
+
+See `.github/workflows/pipeline.yml` for full spec.
+
+## Quick verify after push
 
 ```bash
-pip install -r requirements.txt
-python run_pipeline.py
-open dashboard/sazerac_dashboard.html
+# Check Actions tab at: https://github.com/YOUR_USERNAME/sazerac-analytics-platform/actions
+# Green checkmarks = all good
 ```
-
-## What the GitHub Actions workflow does
-
-| Job | Trigger | Steps |
-|-----|---------|-------|
-| `lint` | Every push | Black format check + Ruff linting |
-| `pipeline` | After lint | Scrape → ETL → DB → Dashboard → Validate |
-| `deploy` | Main branch only | Runs pipeline + deploys to GitHub Pages |
