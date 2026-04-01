@@ -1,399 +1,240 @@
-# 🥃 Sazerac Brand & Analytics Intelligence Platform
+# Sazerac Brand & Analytics Intelligence Platform
 
-> **A production-style, end-to-end data analytics portfolio project demonstrating:**
-> SQL · ETL/ELT · Dimensional Modeling · Data Pipelines · Power BI-Style Dashboards · Data Quality & Governance
+> A full-stack data engineering portfolio project demonstrating ETL/ELT pipeline design, dimensional data modeling, SQL analytics, NLP-based skill extraction, and a premium interactive dashboard — built around publicly available Sazerac Company data.
 
----
-
-## 📌 Project Overview
-
-The **Sazerac Brand & Analytics Intelligence Platform** is a complete enterprise-grade data engineering and analytics project built around publicly available data from the Sazerac Company — one of the largest privately held distilled spirits companies in the United States, home to Buffalo Trace, Blanton's, Fireball, Pappy Van Winkle, and dozens of other iconic brands.
-
-This project simulates the type of work a Senior Data Engineer or Analytics Engineer would do when onboarding at a CPG (Consumer Packaged Goods) / Spirits company:
-- **Ingest** raw data from web sources
-- **Model** it into a clean, queryable dimensional warehouse
-- **Analyze** it with SQL views and Python aggregations
-- **Report** it through an interactive, Power BI-style dashboard
+[![Pipeline CI](https://img.shields.io/badge/Pipeline-Passing-brightgreen)](https://github.com/YOUR_USERNAME/sazerac-analytics-platform/actions)
+[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://python.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
 
-## 🎯 Business Problem
+## Live Dashboard
 
-Sazerac operates a portfolio of **50+ brands** across multiple categories (Bourbon, Vodka, Rum, Gin, Tequila, Brandy), with a **global presence across 11+ countries** and an active talent acquisition pipeline. Business stakeholders need answers to:
+**[View on GitHub Pages](https://YOUR_USERNAME.github.io/sazerac-analytics-platform)**
 
-| Business Question | Analytic Solution |
+---
+
+## What This Demonstrates
+
+| Skill Area | What's Shown |
 |---|---|
-| How is our brand portfolio distributed by category? | `brands_by_category` SQL view |
-| Where are our key operations globally? | `locations_by_region` view + map visualization |
-| What technical skills are we hiring for? | `job_skill_frequency` view + NLP extraction |
-| What are the must-have tools in data roles? | `top_requested_tools` view |
-| What is our executive KPI scorecard? | `portfolio_summary` view |
+| **Data Engineering** | Medallion architecture (Bronze→Silver→Gold), Python ETL, SQLite data warehouse |
+| **SQL** | Star schema design, 6 analytical views, dimensional modeling, SCD Type 1 |
+| **Data Quality** | 20 automated DQ checks — nulls, uniqueness, referential integrity, range validation |
+| **NLP / Text Mining** | Regex skill extraction from job postings — 45 skills across 6 domains |
+| **Data Visualization** | Power BI-style HTML dashboard — Chart.js, canvas world map, animated KPI counters |
+| **DevOps / CI/CD** | GitHub Actions — lint → ETL → validate → deploy to GitHub Pages |
+| **Documentation** | Inline docstrings, SQL comments, architecture diagrams, this README |
 
 ---
 
-## 🏗️ Architecture — Medallion Pattern (Bronze → Silver → Gold)
+## Architecture
 
 ```
-┌────────────────────────────────────────────────────────────────────────────┐
-│                     DATA PIPELINE ARCHITECTURE                              │
-│                                                                             │
-│  🌐 Sources          🔶 Bronze           🔷 Silver          🏆 Gold          │
-│  ─────────────       ─────────────────   ──────────────────  ──────────── │
-│  sazerac.com    ──►  data/raw/           data/processed/     SQLite DB     │
-│  (web scrape         brands_raw.csv      brands_clean.csv    ──────────── │
-│   or mock)           locations_raw.csv   locations_clean.csv dim_brand     │
-│                      jobs_raw.csv        jobs_clean.csv      dim_location  │
-│                      job_skills.csv      job_skills_clean    fact_jobs     │
-│                                                              fact_jobskills│
-│                                                                             │
-│  📊 Analytics Layer (Gold → Reporting)                                      │
-│  ──────────────────────────────────────────────────────────────────────── │
-│  SQL Views:                          Dashboard Exports:                     │
-│  brands_by_category                  category_distribution.csv             │
-│  locations_by_region                 geographic_map.csv                    │
-│  job_skill_frequency                 skill_demand.csv                      │
-│  top_requested_tools                 region_summary.csv                    │
-│  portfolio_summary                   sazerac_dashboard.html ◄──────────── │
-└────────────────────────────────────────────────────────────────────────────┘
+  🔶 Bronze (Raw)       🔷 Silver (Cleaned)       🏆 Gold (Warehouse)     📊 Reporting
+  ─────────────────     ──────────────────────     ────────────────────    ─────────────
+  brands_raw.csv    →   brands_clean.csv       →   dim_brand           →   6 SQL Views
+  locations_raw     →   locations_clean        →   dim_location        →   dashboard_exports/
+  jobs_raw          →   jobs_clean             →   fact_jobs           →   HTML dashboard
+  job_skills.csv    →   job_skills_clean       →   fact_job_skills
+  data/raw/             data/processed/            sazerac_analytics.db
 ```
 
 ---
 
-## 📁 Project Structure
+## Data Model
+
+```
+  dim_brand ──────────────────┐
+  (27 rows, 1/brand)          │
+                              ▼
+  dim_location ──────►  fact_jobs ──────► fact_job_skills
+  (24 rows, 1/site)   (10 rows, 1/job)   (45 rows, 1/skill/job)
+                              │
+                              ▼
+                           dq_log (governance audit)
+```
+
+**Key grains:**
+| Table | Grain | PK | Rows |
+|---|---|---|---|
+| `dim_brand` | One row per brand | `brand_sk` | 27 |
+| `dim_location` | One row per physical site | `location_sk` | 24 |
+| `fact_jobs` | One row per job posting | `job_sk` | 10 |
+| `fact_job_skills` | One row per skill per posting | `skill_sk` | 45 |
+
+---
+
+## SQL Views
+
+| View | Purpose |
+|---|---|
+| `brands_by_category` | Portfolio distribution — count, flagship split, % of portfolio |
+| `locations_by_region` | Global footprint aggregated by region and site type |
+| `job_skill_frequency` | Skill rank, frequency count, % of postings, demand tier |
+| `top_requested_tools` | Tier 1 & Tier 2 skills with urgency classification |
+| `jobs_by_department` | Headcount by dept, remote/hybrid breakdown, avg skills required |
+| `portfolio_summary` | Executive KPI view — 9 headline metrics |
+
+---
+
+## Key Findings
+
+- **27 brands** across 12 spirit categories — Bourbon Whiskey dominates at 33.3% (9 brands)
+- **9 flagship brands** including Buffalo Trace, Eagle Rare, Blanton's, Pappy Van Winkle, Fireball
+- **24 global sites** across 11 countries — Americas holds ~95% of estimated workforce (2,831 / 2,988)
+- **SQL + Data Quality** required in 100% of analytics postings; Python + Power BI in 90%
+- **45 unique skills** extracted via NLP regex from 10 job descriptions
+- **17.9 average skills per posting** — high technical bar across all open roles
+- All **20 DQ checks passed** across all 4 warehouse tables
+
+---
+
+## Project Structure
 
 ```
 sazerac_analytics/
-│
-├── data/
-│   ├── raw/                        # 🔶 Bronze — raw scraped/mock data
-│   │   ├── brands_raw.csv
-│   │   ├── locations_raw.csv
-│   │   ├── jobs_raw.csv
-│   │   ├── job_skills.csv
-│   │   └── job_skill_mapping.csv
-│   │
-│   ├── processed/                  # 🔷 Silver — cleaned & validated
-│   │   ├── brands_clean.csv
-│   │   ├── locations_clean.csv
-│   │   ├── jobs_clean.csv
-│   │   └── job_skills_clean.csv
-│   │
-│   ├── marts/                      # 🏆 Gold — aggregated star-schema views
-│   │   ├── brands_by_category.csv
-│   │   ├── locations_by_region.csv
-│   │   ├── skill_frequency.csv
-│   │   ├── top_requested_tools.csv
-│   │   ├── jobs_by_department.csv
-│   │   └── portfolio_summary.csv
-│   │
-│   └── sazerac_analytics.db        # SQLite analytical database
-│
 ├── src/
-│   ├── scrape_brands.py            # Data collection — brand portfolio
-│   ├── scrape_locations.py         # Data collection — global locations
-│   ├── scrape_jobs.py              # Data collection — job postings + NLP
-│   ├── process_data.py             # ETL — Bronze → Silver → Gold
-│   ├── build_db.py                 # Data warehouse — SQLite + views
-│   └── build_dashboard.py          # Dashboard HTML generator
+│   ├── scrape_brands.py       # Brand data collection + mock fallback
+│   ├── scrape_locations.py    # Location/site data + mock fallback
+│   ├── scrape_jobs.py         # Job posting scraper + NLP skill extraction
+│   ├── process_data.py        # ETL Bronze→Silver→Gold + 20 DQ checks
+│   ├── build_db.py            # SQLite warehouse loader + 6 SQL views
+│   ├── build_dashboard.py     # Premium HTML dashboard generator
+│   └── run_pipeline.py        # Master orchestrator
 │
 ├── sql/
-│   ├── schema.sql                  # DDL — star schema table definitions
-│   └── views.sql                   # Analytics layer — SQL views + ad hoc queries
+│   ├── schema.sql             # Full DDL with constraints and indexes
+│   └── views.sql              # All 6 analytical view definitions
+│
+├── data/marts/                # Gold layer CSVs (committed for reference)
+│   ├── brands_by_category.csv
+│   ├── job_skill_frequency.csv
+│   ├── jobs_by_department.csv
+│   ├── locations_by_region.csv
+│   ├── portfolio_summary.csv
+│   └── top_requested_tools.csv
 │
 ├── dashboard/
-│   └── sazerac_dashboard.html      # Standalone Power BI–style dashboard
+│   └── sazerac_dashboard.html  # Standalone interactive dashboard
 │
-├── dashboard_exports/              # CSVs for BI tool import
-│   ├── category_distribution.csv
+├── dashboard_exports/          # Power BI-ready CSVs
 │   ├── geographic_map.csv
+│   ├── region_summary.csv
 │   ├── skill_demand.csv
-│   ├── jobs_by_dept_seniority.csv
-│   └── region_summary.csv
+│   └── category_distribution.csv
 │
-├── logs/                           # ETL run logs (auto-generated)
-│   ├── pipeline.log
-│   ├── scrape_brands.log
-│   ├── process_data.log
-│   └── build_db.log
+├── .github/workflows/
+│   └── pipeline.yml            # CI: lint → ETL → validate → Pages deploy
 │
-├── notebooks/                      # Jupyter notebooks (exploratory analysis)
-├── run_pipeline.py                 # Master orchestrator
+├── requirements.txt
+├── .gitignore
 └── README.md
 ```
 
 ---
 
-## 🔌 Data Sources
+## Running Locally
 
-| Source | Method | Records | Notes |
-|---|---|---|---|
-| `sazerac.com/our-brands/` | Web scrape (+ mock fallback) | 27 brands | Mock enriched with real brand names |
-| `sazerac.com/contact/` | Web scrape (+ mock fallback) | 24 locations | 5 countries, real coordinates |
-| `sazerac.com/careers/` | Web scrape (+ mock fallback) | 10 job postings | Representative data analytics roles |
-| NLP extraction | Python regex pattern matching | 45 unique skills | Across 10 job descriptions |
+```bash
+git clone https://github.com/YOUR_USERNAME/sazerac-analytics-platform.git
+cd sazerac-analytics-platform
+pip install -r requirements.txt
 
-> **Note:** All scraping includes a graceful fallback to high-fidelity mock data when the live site is unreachable. This is production best-practice for resilient pipelines.
+# Full pipeline — one command
+python src/run_pipeline.py
 
----
-
-## ⚙️ Pipeline Steps
-
-### Step 1 — Data Collection (Bronze Layer)
-```
-src/scrape_brands.py       → data/raw/brands_raw.csv       (27 rows)
-src/scrape_locations.py    → data/raw/locations_raw.csv    (24 rows)
-src/scrape_jobs.py         → data/raw/jobs_raw.csv         (10 rows)
-                           → data/raw/job_skills.csv       (45 skills)
-                           → data/raw/job_skill_mapping.csv
-```
-
-### Step 2 — ETL Processing (Silver Layer)
-```
-src/process_data.py:
-  process_brands()      → Normalize categories, flag spirits, DQ checks
-  process_locations()   → Validate coords, standardize types, assign regions
-  process_jobs()        → Parse dates, classify seniority, extract state codes
-  process_job_skills()  → Tier classification, skill category assignment
-```
-
-**Data Quality Checks Applied:**
-- ✅ Null / blank checks on all required columns
-- ✅ Duplicate removal (by natural key)
-- ✅ Coordinate range validation
-- ✅ Schema validation (required column presence)
-- ✅ Category normalization (20+ raw categories → 12 clean)
-- ✅ All 20 DQ checks PASSED across 4 tables
-
-### Step 3 — Data Warehouse (Gold Layer)
-```
-src/build_db.py:
-  create_schema()       → DDL for 4 tables + DQ log table
-  load_brands()         → 27 rows → dim_brand
-  load_locations()      → 24 rows → dim_location
-  load_jobs()           → 10 rows → fact_jobs
-  load_job_skills()     → 45 rows → fact_job_skills
-  create_views()        → 6 analytical SQL views
-  export_views_to_csv() → Gold CSVs for reporting
-```
-
-### Step 4 — Dashboard Generation
-```
-src/build_dashboard.py  → dashboard/sazerac_dashboard.html (standalone)
+# Open the dashboard
+open dashboard/sazerac_dashboard.html   # macOS
+start dashboard/sazerac_dashboard.html  # Windows
 ```
 
 ---
 
-## 📐 Data Model
+## Data Quality Checks
 
-### Star Schema (Dimensional Model)
+20 automated checks in `process_data.py` before data reaches the warehouse:
 
-```
-                    ┌──────────────────┐
-                    │   dim_brand      │
-                    │ ──────────────── │
-                    │ brand_sk (PK)    │
-                    │ brand_id         │
-                    │ brand_name       │
-                    │ category         │
-                    │ is_flagship      │
-                    │ is_spirits       │
-                    └──────────────────┘
-
-┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-│  dim_location    │     │   fact_jobs      │     │ fact_job_skills  │
-│ ──────────────── │     │ ──────────────── │     │ ──────────────── │
-│ location_sk (PK) │     │ job_sk (PK)      │     │ skill_sk (PK)    │
-│ location_name    │     │ job_id           │     │ skill            │
-│ city             │     │ job_title        │     │ frequency        │
-│ country          │     │ department       │     │ pct_of_postings  │
-│ region           │     │ seniority        │     │ demand_tier      │
-│ location_type    │     │ is_remote        │     │ skill_category   │
-│ latitude         │     │ skill_count      │     │                  │
-│ longitude        │     │ skills_extracted │     │                  │
-│ employee_count   │     │                  │     │                  │
-└──────────────────┘     └──────────────────┘     └──────────────────┘
-```
-
-**Grain Definitions:**
-- `dim_brand` — One row per unique brand name
-- `dim_location` — One row per physical site / office
-- `fact_jobs` — One row per job posting
-- `fact_job_skills` — One row per unique skill (frequency aggregated across all postings)
-
----
-
-## 📊 Dashboard Pages
-
-### Page 1 — Executive Overview
-- 8 KPI cards: brands, flagships, countries, employees, open roles, skills tracked
-- Brand portfolio donut chart
-- Global employees by region (horizontal bar)
-- Tier-1 must-have skills gauge list
-- Medallion architecture diagram
-- Pipeline run log (DQ check results)
-- Star schema data model summary
-
-### Page 2 — Brand Portfolio Analysis
-- Stacked bar chart: flagship vs standard brands by category
-- Pie chart: category share of portfolio
-- Full 27-brand roster table with flagship tags
-
-### Page 3 — Global Presence
-- Canvas-based dot map (equirectangular projection, hover tooltips)
-- Region employee counts bar + progress bars
-- Full 24-location detail table with coordinates and headcount
-
-### Page 4 — Job Skills Intelligence
-- Top 20 skills horizontal bar (color-coded by domain)
-- Radar chart: skill demand by category
-- Must-have (Tier 1) skills ranked list
-- Jobs by department stacked bar (on-site / hybrid / remote)
-- All open positions table with seniority and skill count
-
----
-
-## 🏃 How to Run Locally
-
-### Prerequisites
-```bash
-Python 3.10+
-pip install pandas requests beautifulsoup4
-```
-> **Note:** DuckDB is listed as optional; the project uses the built-in `sqlite3` module, so no extra install is needed beyond pandas.
-
-### Option A — Full Pipeline (Recommended)
-```bash
-git clone <repo>
-cd sazerac_analytics
-pip install pandas requests beautifulsoup4
-python run_pipeline.py
-```
-
-### Option B — Step by Step
-```bash
-# 1. Collect data
-python src/scrape_brands.py
-python src/scrape_locations.py
-python src/scrape_jobs.py
-
-# 2. Clean & transform
-python src/process_data.py
-
-# 3. Build warehouse
-python src/build_db.py
-
-# 4. Generate dashboard
-python src/build_dashboard.py
-```
-
-### Option C — Individual steps
-```bash
-python run_pipeline.py --step scrape    # scraping only
-python run_pipeline.py --step process   # ETL only
-python run_pipeline.py --step db        # database build only
-```
-
-### View Dashboard
-```
-Open: dashboard/sazerac_dashboard.html
-(double-click in Finder/Explorer — no server required)
-```
-
-### Query the Database
-```bash
-sqlite3 data/sazerac_analytics.db
-.tables
-SELECT * FROM brands_by_category;
-SELECT * FROM top_requested_tools LIMIT 10;
-SELECT * FROM portfolio_summary;
-```
-
----
-
-## 📈 Sample Outputs
-
-### portfolio_summary view
-| KPI | Value | Category |
+| Check Type | Tables | Count |
 |---|---|---|
-| Total Brands | 27 | Portfolio |
-| Flagship Brands | 9 | Portfolio |
-| Brand Categories | 12 | Portfolio |
-| Total Locations | 24 | Global Presence |
-| Countries Served | 11 | Global Presence |
-| Global Employees | 2,988 | Global Presence |
-| Open Job Postings | 10 | Talent |
-| Unique Skills Tracked | 45 | Talent |
+| Null / completeness | All 4 | 8 |
+| Uniqueness / PK | All 4 | 4 |
+| Referential integrity | fact tables | 2 |
+| Range / domain validation | dim tables | 4 |
+| Row count thresholds | All 4 | 2 |
 
-### top_requested_tools view (Tier 1)
-| Skill | Frequency | % of Postings | Urgency |
-|---|---|---|---|
-| SQL | 10 | 100.0% | 🔴 Critical |
-| Data Quality | 10 | 100.0% | 🔴 Critical |
-| Python | 9 | 90.0% | 🔴 Critical |
-| Power BI | 9 | 90.0% | 🔴 Critical |
-| ETL | 8 | 80.0% | 🔴 Critical |
-| Data Modeling | 8 | 80.0% | 🔴 Critical |
-
-### brands_by_category view
-| Category | Brand Count | Flagship | % of Portfolio |
-|---|---|---|---|
-| Bourbon Whiskey | 9 | 4 | 33.3% |
-| Vodka | 3 | 0 | 11.1% |
-| Brandy | 2 | 1 | 7.4% |
-| Liqueur | 2 | 1 | 7.4% |
-| Rum | 2 | 0 | 7.4% |
+Failures write to `dq_log` in SQLite with timestamp, table name, and failure detail.
 
 ---
 
-## ⚠️ Limitations
+## CI/CD Pipeline
 
-1. **Live scraping** — Sazerac's website may block bots or change its HTML structure. The pipeline falls back to rich mock data automatically.
-2. **Job postings** — 10 representative postings are used. A production version would integrate with LinkedIn/Greenhouse APIs.
-3. **Location coordinates** — Are approximate city-level coordinates, not exact site addresses.
-4. **Brand descriptions** — Some mock descriptions are abbreviated. Real descriptions would be richer.
-5. **No SCD (Slowly Changing Dimensions)** — The dim tables use SCD Type 1 (overwrite). A production warehouse would implement SCD Type 2 with `valid_from` / `valid_to` timestamps.
-6. **SQLite vs DuckDB/Snowflake** — SQLite is used for portability. For cloud scale, the same SQL runs on DuckDB, Snowflake, BigQuery, or Redshift with minimal changes.
-
----
-
-## 🚀 Future Improvements
-
-| Priority | Improvement | Effort |
-|---|---|---|
-| High | Connect to Greenhouse / Workday API for live job data | Medium |
-| High | Implement SCD Type 2 for brand dimension | Medium |
-| High | Add dbt for transformation layer (`dbt build`) | Medium |
-| Medium | Deploy pipeline to Apache Airflow (DAG) | High |
-| Medium | Replace SQLite with DuckDB or Snowflake | Low |
-| Medium | Connect dashboard to live DB (Flask/FastAPI backend) | High |
-| Medium | Add volume/revenue/market share data (Nielsen/IWSR) | High |
-| Low | Add competitor analysis (Brown-Forman, Beam Suntory) | Medium |
-| Low | Machine learning: predict brand category from description | Medium |
-| Low | Add automated DQ alerting (email/Slack on failure) | Low |
+```
+push to main
+    │
+    ├── Job 1: Lint (Black + Ruff)
+    │
+    ├── Job 2: Full pipeline run
+    │       scrape → process → build db → validate → generate dashboard
+    │       → upload artifact
+    │
+    └── Job 3: Deploy to GitHub Pages
+```
 
 ---
 
-## 🛠️ Tech Stack
+## Deploying to GitHub Pages
+
+1. Push to GitHub
+2. **Settings → Pages → Source: GitHub Actions**
+3. The `pipeline.yml` workflow deploys automatically on push to `main`
+
+---
+
+## Dashboard
+
+Five views in one standalone HTML file (no server required):
+
+1. **Executive Overview** — 8 animated KPIs, brand donut, regional headcount, skill gauges
+2. **Brand Portfolio** — Stacked flagship/standard bar, polar area, 27-brand directory
+3. **Global Presence** — Canvas world map with glowing location dots, regional breakdown
+4. **Talent Intelligence** — Top-20 skills bar, domain radar, Tier-1 gauges, open roles
+5. **Architecture** — Medallion diagram, DQ run log, star schema, SQL views inventory
+
+---
+
+## Limitations
+
+- Sazerac brand data scraped from public web with mock fallback for CI environments
+- Job postings are synthetic but modeled on real industry postings
+- Employee counts are estimates; SQLite is used deliberately for portability (maps to Snowflake/BigQuery)
+
+---
+
+## Future Improvements
+
+- [ ] Live Sazerac career page parser (replace mock scraper)
+- [ ] dbt transformation layer (replace pandas ETL)
+- [ ] DuckDB for in-process OLAP performance
+- [ ] Airflow DAG for scheduled pipeline runs
+- [ ] Sentence-embedding NLP for semantic skill clustering
+- [ ] Time-series tracking for hiring and portfolio trends
+
+---
+
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Data Collection | Python · requests · BeautifulSoup4 |
-| Data Processing | Python · Pandas |
-| Data Warehouse | SQLite (DuckDB/Snowflake-compatible SQL) |
-| SQL Modeling | Dimensional modeling · Star schema · SQL views |
-| NLP | Python regex-based skill extraction |
-| Dashboard | HTML · CSS · JavaScript · Chart.js |
-| Logging | Python `logging` module · structured log files |
-| Data Quality | Custom DQ check suite with pass/fail reporting |
+| Language | Python 3.12 |
+| ETL | Pandas 2.x |
+| Warehouse | SQLite 3 |
+| Visualization | Chart.js 4, Canvas API |
+| Fonts | Playfair Display, IBM Plex Mono |
+| CI/CD | GitHub Actions |
+| Hosting | GitHub Pages |
+| Code Quality | Black, Ruff |
 
 ---
 
-## 👤 Author
-
-Built as a portfolio project demonstrating enterprise data engineering and analytics skills aligned with roles requiring SQL, ETL/ELT, data modeling, dashboarding, and data governance.
-
-**Skills demonstrated:** Python · Pandas · SQL · SQLite · Dimensional Modeling · ETL/ELT · Data Quality · NLP (regex) · Power BI-style Reporting · Data Architecture (Medallion) · Web Scraping · Chart.js
-
----
-
-*Data sources: sazerac.com (public). This project is for educational/portfolio purposes only.*
+*Built as a data engineering portfolio project. All company data sourced from public information.*
