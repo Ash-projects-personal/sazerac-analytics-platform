@@ -9,12 +9,9 @@ ETL / ELT processing pipeline:
 Runs data quality checks at each stage and logs results.
 """
 
-import csv
 import logging
 import os
-import re
 from datetime import datetime
-from typing import Any
 
 import pandas as pd
 

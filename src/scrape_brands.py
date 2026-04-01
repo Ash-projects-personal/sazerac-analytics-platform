@@ -8,10 +8,8 @@ Output: data/raw/brands_raw.csv
 """
 
 import csv
-import json
 import logging
 import os
-import time
 from datetime import datetime
 
 # ── optional scraping imports ──────────────────────────────────────────────────
