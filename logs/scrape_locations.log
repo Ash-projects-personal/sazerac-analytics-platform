@@ -1,0 +1,5 @@
+2026-03-31 23:59:08,597 | INFO | === Location Scraper Starting ===
+2026-03-31 23:59:08,600 | WARNING | Location scrape failed (HTTPSConnectionPool(host='www.sazerac.com', port=443): Max retries exceeded with url: /contact/ (Caused by NameResolutionError("HTTPSConnection(host='www.sazerac.com', port=443): Failed to resolve 'www.sazerac.com' ([Errno -3] Temporary failure in name resolution)"))). Using mock data.
+2026-03-31 23:59:08,600 | INFO | Loading 24 locations from mock dataset
+2026-03-31 23:59:08,601 | INFO | Saved 24 locations → data/raw/locations_raw.csv
+2026-03-31 23:59:08,601 | INFO | === Location Scraper Complete ===

@@ -1,0 +1,25 @@
+location_id,location_name,city,state_province,country,region,location_type,latitude,longitude,year_established,employee_count,scraped_at
+1,Buffalo Trace Distillery,Frankfort,Kentucky,United States,Americas,Distillery,38.2009,-84.8733,1773,450,2026-03-31T23:59:08.601120
+2,Barton 1792 Distillery,Bardstown,Kentucky,United States,Americas,Distillery,37.809,-85.4669,1879,300,2026-03-31T23:59:08.601120
+3,Glenmore Distillery,Owensboro,Kentucky,United States,Americas,Distillery,37.7719,-87.1112,1901,200,2026-03-31T23:59:08.601120
+4,Medley Distillery,Owensboro,Kentucky,United States,Americas,Distillery,37.773,-87.115,1940,120,2026-03-31T23:59:08.601120
+5,A. Smith Bowman Distillery,Fredericksburg,Virginia,United States,Americas,Distillery,38.3032,-77.4605,1934,80,2026-03-31T23:59:08.601120
+6,Sazerac Company Headquarters,Louisville,Kentucky,United States,Americas,Headquarters,38.2527,-85.7585,1850,600,2026-03-31T23:59:08.601120
+7,Sazerac New Orleans Office,New Orleans,Louisiana,United States,Americas,Office,29.9511,-90.0715,1989,150,2026-03-31T23:59:08.601120
+8,Sazerac Atlanta Regional Office,Atlanta,Georgia,United States,Americas,Office,33.749,-84.388,2010,75,2026-03-31T23:59:08.601120
+9,Sazerac Chicago Regional Office,Chicago,Illinois,United States,Americas,Office,41.8781,-87.6298,2008,90,2026-03-31T23:59:08.601120
+10,Sazerac New York Regional Office,New York City,New York,United States,Americas,Office,40.7128,-74.006,2005,110,2026-03-31T23:59:08.601120
+11,Sazerac Los Angeles Regional Office,Los Angeles,California,United States,Americas,Office,34.0522,-118.2437,2012,85,2026-03-31T23:59:08.601120
+12,Sazerac Dallas Regional Office,Dallas,Texas,United States,Americas,Office,32.7767,-96.797,2015,60,2026-03-31T23:59:08.601120
+13,Sazerac Distribution Center — Louisville,Louisville,Kentucky,United States,Americas,Distribution Center,38.22,-85.75,2000,250,2026-03-31T23:59:08.601120
+14,Sazerac Distribution Center — Memphis,Memphis,Tennessee,United States,Americas,Distribution Center,35.1495,-90.049,2003,180,2026-03-31T23:59:08.601120
+15,Sazerac UK Office,London,England,United Kingdom,Europe,International Office,51.5074,-0.1278,2016,45,2026-03-31T23:59:08.601120
+16,Sazerac Germany Office,Hamburg,Hamburg,Germany,Europe,International Office,53.5511,9.9937,2018,30,2026-03-31T23:59:08.601120
+17,Sazerac France Office,Paris,Île-de-France,France,Europe,International Office,48.8566,2.3522,2017,25,2026-03-31T23:59:08.601120
+18,Sazerac Australia Office,Sydney,New South Wales,Australia,APAC,International Office,-33.8688,151.2093,2019,20,2026-03-31T23:59:08.601120
+19,Sazerac Japan Office,Tokyo,Tokyo,Japan,APAC,International Office,35.6762,139.6503,2020,15,2026-03-31T23:59:08.601120
+20,Sazerac Canada Office,Toronto,Ontario,Canada,Americas,International Office,43.6532,-79.3832,2014,35,2026-03-31T23:59:08.601120
+21,Sazerac Mexico Office,Mexico City,CDMX,Mexico,Americas,International Office,19.4326,-99.1332,2018,28,2026-03-31T23:59:08.601120
+22,Sazerac Singapore Office,Singapore,Central Region,Singapore,APAC,International Office,1.3521,103.8198,2021,12,2026-03-31T23:59:08.601120
+23,Sazerac Brazil Office,São Paulo,São Paulo,Brazil,Americas,International Office,-23.5505,-46.6333,2022,18,2026-03-31T23:59:08.601120
+24,Sazerac South Africa Office,Cape Town,Western Cape,South Africa,EMEA,International Office,-33.9249,18.4241,2023,10,2026-03-31T23:59:08.601120

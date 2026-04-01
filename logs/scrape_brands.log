@@ -1,0 +1,6 @@
+2026-03-31 23:59:05,888 | INFO | === Brand Scraper Starting ===
+2026-03-31 23:59:05,888 | INFO | Attempting live scrape of https://www.sazerac.com/our-brands/
+2026-03-31 23:59:05,890 | WARNING | Live scrape failed (HTTPSConnectionPool(host='www.sazerac.com', port=443): Max retries exceeded with url: /our-brands/ (Caused by NameResolutionError("HTTPSConnection(host='www.sazerac.com', port=443): Failed to resolve 'www.sazerac.com' ([Errno -3] Temporary failure in name resolution)"))). Falling back to mock data.
+2026-03-31 23:59:05,891 | INFO | Loading 27 brands from mock dataset
+2026-03-31 23:59:05,892 | INFO | Saved 27 brands → data/raw/brands_raw.csv
+2026-03-31 23:59:05,892 | INFO | === Brand Scraper Complete ===

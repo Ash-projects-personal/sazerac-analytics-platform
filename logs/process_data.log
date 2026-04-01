@@ -1,0 +1,51 @@
+2026-03-31 23:59:15,834 | INFO | ========== ETL Pipeline Starting ==========
+2026-03-31 23:59:15,834 | INFO | --- Processing Brands (Bronze → Silver) ---
+2026-03-31 23:59:15,838 | INFO | Loaded 27 raw brand records
+2026-03-31 23:59:15,843 | INFO | Removed 0 duplicate brands
+2026-03-31 23:59:15,844 | INFO | [DQ PASS] dim_brand_silver — Row count OK (27 rows)
+2026-03-31 23:59:15,844 | INFO | [DQ PASS] dim_brand_silver — All 2 required columns present
+2026-03-31 23:59:15,845 | INFO | [DQ PASS] dim_brand_silver — No nulls in 'brand_name'
+2026-03-31 23:59:15,846 | INFO | [DQ PASS] dim_brand_silver — No nulls in 'category_clean'
+2026-03-31 23:59:15,846 | INFO | [DQ PASS] dim_brand_silver — No duplicates on ['brand_name']
+2026-03-31 23:59:15,846 | INFO | [DQ SUMMARY] dim_brand_silver | Passed: 5 | Failed: 0
+2026-03-31 23:59:15,849 | INFO | Saved cleaned brands → data/processed/brands_clean.csv (27 records)
+2026-03-31 23:59:15,849 | INFO | --- Processing Locations (Bronze → Silver) ---
+2026-03-31 23:59:15,850 | INFO | Loaded 24 raw location records
+2026-03-31 23:59:15,853 | INFO | Removed 0 duplicate locations
+2026-03-31 23:59:15,854 | INFO | [DQ PASS] dim_location_silver — Row count OK (24 rows)
+2026-03-31 23:59:15,854 | INFO | [DQ PASS] dim_location_silver — All 3 required columns present
+2026-03-31 23:59:15,854 | INFO | [DQ PASS] dim_location_silver — No nulls in 'location_name'
+2026-03-31 23:59:15,855 | INFO | [DQ PASS] dim_location_silver — No nulls in 'country'
+2026-03-31 23:59:15,855 | INFO | [DQ PASS] dim_location_silver — No nulls in 'region'
+2026-03-31 23:59:15,855 | INFO | [DQ PASS] dim_location_silver — No duplicates on ['location_name']
+2026-03-31 23:59:15,855 | INFO | [DQ SUMMARY] dim_location_silver | Passed: 6 | Failed: 0
+2026-03-31 23:59:15,857 | INFO | Saved cleaned locations → data/processed/locations_clean.csv (24 records)
+2026-03-31 23:59:15,857 | INFO | --- Processing Jobs (Bronze → Silver) ---
+2026-03-31 23:59:15,859 | INFO | Loaded 10 raw job records
+2026-03-31 23:59:15,864 | INFO | Removed 0 duplicate jobs
+2026-03-31 23:59:15,865 | INFO | [DQ PASS] fact_jobs_silver — Row count OK (10 rows)
+2026-03-31 23:59:15,865 | INFO | [DQ PASS] fact_jobs_silver — All 2 required columns present
+2026-03-31 23:59:15,865 | INFO | [DQ PASS] fact_jobs_silver — No nulls in 'job_title'
+2026-03-31 23:59:15,865 | INFO | [DQ PASS] fact_jobs_silver — No nulls in 'department'
+2026-03-31 23:59:15,866 | INFO | [DQ PASS] fact_jobs_silver — No duplicates on ['job_id']
+2026-03-31 23:59:15,866 | INFO | [DQ SUMMARY] fact_jobs_silver | Passed: 5 | Failed: 0
+2026-03-31 23:59:15,867 | INFO | Saved cleaned jobs → data/processed/jobs_clean.csv (10 records)
+2026-03-31 23:59:15,868 | INFO | --- Processing Job Skills (Bronze → Silver) ---
+2026-03-31 23:59:15,869 | INFO | Loaded 45 skill frequency records
+2026-03-31 23:59:15,870 | INFO | [DQ PASS] fact_job_skills_silver — Row count OK (45 rows)
+2026-03-31 23:59:15,871 | INFO | [DQ PASS] fact_job_skills_silver — All 2 required columns present
+2026-03-31 23:59:15,871 | INFO | [DQ PASS] fact_job_skills_silver — No nulls in 'skill'
+2026-03-31 23:59:15,871 | INFO | [DQ PASS] fact_job_skills_silver — No nulls in 'frequency'
+2026-03-31 23:59:15,871 | INFO | [DQ SUMMARY] fact_job_skills_silver | Passed: 4 | Failed: 0
+2026-03-31 23:59:15,873 | INFO | Saved cleaned job skills → data/processed/job_skills_clean.csv
+2026-03-31 23:59:15,881 | INFO | Built mart: brands_by_category (12 rows) → data/marts/brands_by_category.csv
+2026-03-31 23:59:15,887 | INFO | Built mart: locations_by_region (8 rows) → data/marts/locations_by_region.csv
+2026-03-31 23:59:15,889 | INFO | Built mart: skill_frequency (30 rows) → data/marts/skill_frequency.csv
+2026-03-31 23:59:15,892 | INFO | Built mart: portfolio_summary (16 KPIs) → data/marts/portfolio_summary.csv
+2026-03-31 23:59:15,895 | INFO | Dashboard export: category_distribution
+2026-03-31 23:59:15,897 | INFO | Dashboard export: geographic_map
+2026-03-31 23:59:15,899 | INFO | Dashboard export: skill_demand
+2026-03-31 23:59:15,901 | INFO | Dashboard export: jobs_by_dept_seniority
+2026-03-31 23:59:15,907 | INFO | Dashboard export: region_summary
+2026-03-31 23:59:15,908 | INFO | All dashboard exports complete → dashboard_exports/
+2026-03-31 23:59:15,908 | INFO | ========== ETL Pipeline Complete ==========

@@ -1,0 +1,30 @@
+2026-03-31 23:59:19,256 | INFO | ========== Database Builder Starting ==========
+2026-03-31 23:59:19,265 | INFO | Creating schema...
+2026-03-31 23:59:19,278 | INFO | Schema created successfully
+2026-03-31 23:59:19,281 | INFO | Loading 27 brands into dim_brand...
+2026-03-31 23:59:19,286 | INFO | dim_brand loaded: 27 records
+2026-03-31 23:59:19,287 | INFO | Loading 24 locations into dim_location...
+2026-03-31 23:59:19,291 | INFO | dim_location loaded: 24 records
+2026-03-31 23:59:19,293 | INFO | Loading 10 jobs into fact_jobs...
+2026-03-31 23:59:19,296 | INFO | fact_jobs loaded: 10 records
+2026-03-31 23:59:19,297 | INFO | Loading 45 skill records into fact_job_skills...
+2026-03-31 23:59:19,302 | INFO | fact_job_skills loaded: 45 records
+2026-03-31 23:59:19,302 | INFO | Creating analytical views...
+2026-03-31 23:59:19,316 | INFO | All views created
+2026-03-31 23:59:19,317 | INFO | Running post-load DB validation...
+2026-03-31 23:59:19,317 | INFO | [VALIDATE] dim_brand row count → [(27,)]
+2026-03-31 23:59:19,317 | INFO | [VALIDATE] dim_location row count → [(24,)]
+2026-03-31 23:59:19,317 | INFO | [VALIDATE] fact_jobs row count → [(10,)]
+2026-03-31 23:59:19,317 | INFO | [VALIDATE] fact_job_skills row count → [(45,)]
+2026-03-31 23:59:19,317 | INFO | [VALIDATE] Brands by category (top 3) → [('Bourbon Whiskey', 9), ('Vodka', 3), ('Brandy', 2)]
+2026-03-31 23:59:19,318 | INFO | [VALIDATE] Locations by region → [('APAC', 3), ('Americas', 6), ('Americas', 5), ('Americas', 3), ('Americas', 2)]
+2026-03-31 23:59:19,318 | INFO | [VALIDATE] Top 5 skills → [('SQL', 10), ('Data Quality', 10), ('Python', 9), ('Power BI', 9), ('Reporting', 9)]
+2026-03-31 23:59:19,318 | INFO | [VALIDATE] KPI summary → [('Total Brands', 27), ('Flagship Brands', 9), ('Brand Categories', 12), ('Total Locations', 24), ('Countries Served', 11)]
+2026-03-31 23:59:19,323 | INFO | Exported view 'brands_by_category' → data/marts/brands_by_category.csv (12 rows)
+2026-03-31 23:59:19,325 | INFO | Exported view 'locations_by_region' → data/marts/locations_by_region.csv (8 rows)
+2026-03-31 23:59:19,327 | INFO | Exported view 'job_skill_frequency' → data/marts/job_skill_frequency.csv (45 rows)
+2026-03-31 23:59:19,329 | INFO | Exported view 'top_requested_tools' → data/marts/top_requested_tools.csv (19 rows)
+2026-03-31 23:59:19,330 | INFO | Exported view 'jobs_by_department' → data/marts/jobs_by_department.csv (7 rows)
+2026-03-31 23:59:19,332 | INFO | Exported view 'portfolio_summary' → data/marts/portfolio_summary.csv (9 rows)
+2026-03-31 23:59:19,336 | INFO | ========== Database Builder Complete ==========
+2026-03-31 23:59:19,336 | INFO | Database: /home/claude/sazerac_analytics/data/sazerac_analytics.db

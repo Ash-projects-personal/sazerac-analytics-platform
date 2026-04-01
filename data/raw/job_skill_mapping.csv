@@ -1,0 +1,180 @@
+job_id,job_title,skill
+1,Senior Data Engineer,SQL
+1,Senior Data Engineer,Python
+1,Senior Data Engineer,Power BI
+1,Senior Data Engineer,Azure
+1,Senior Data Engineer,Snowflake
+1,Senior Data Engineer,Databricks
+1,Senior Data Engineer,ETL
+1,Senior Data Engineer,ELT
+1,Senior Data Engineer,dbt
+1,Senior Data Engineer,Airflow
+1,Senior Data Engineer,SQL Server
+1,Senior Data Engineer,PostgreSQL
+1,Senior Data Engineer,Data Warehouse
+1,Senior Data Engineer,Data Lake
+1,Senior Data Engineer,Data Lakehouse
+1,Senior Data Engineer,Star Schema
+1,Senior Data Engineer,Dimensional Modeling
+1,Senior Data Engineer,Data Governance
+1,Senior Data Engineer,Data Quality
+1,Senior Data Engineer,Agile
+1,Senior Data Engineer,KPIs
+1,Senior Data Engineer,Reporting
+1,Senior Data Engineer,Business Intelligence
+2,Data Analyst — Brand Analytics,SQL
+2,Data Analyst — Brand Analytics,Python
+2,Data Analyst — Brand Analytics,R
+2,Data Analyst — Brand Analytics,Power BI
+2,Data Analyst — Brand Analytics,Tableau
+2,Data Analyst — Brand Analytics,Looker
+2,Data Analyst — Brand Analytics,Excel
+2,Data Analyst — Brand Analytics,SQL Server
+2,Data Analyst — Brand Analytics,Data Warehouse
+2,Data Analyst — Brand Analytics,Statistics
+2,Data Analyst — Brand Analytics,Data Quality
+2,Data Analyst — Brand Analytics,KPIs
+2,Data Analyst — Brand Analytics,Reporting
+2,Data Analyst — Brand Analytics,Business Intelligence
+3,Business Intelligence Developer,SQL
+3,Business Intelligence Developer,DAX
+3,Business Intelligence Developer,Power BI
+3,Business Intelligence Developer,Excel
+3,Business Intelligence Developer,SSRS
+3,Business Intelligence Developer,Azure
+3,Business Intelligence Developer,Snowflake
+3,Business Intelligence Developer,Redshift
+3,Business Intelligence Developer,ETL
+3,Business Intelligence Developer,SQL Server
+3,Business Intelligence Developer,Data Modeling
+3,Business Intelligence Developer,Star Schema
+3,Business Intelligence Developer,OLAP
+3,Business Intelligence Developer,Dimensional Modeling
+3,Business Intelligence Developer,Data Governance
+3,Business Intelligence Developer,Data Quality
+3,Business Intelligence Developer,Agile
+3,Business Intelligence Developer,KPIs
+3,Business Intelligence Developer,Reporting
+3,Business Intelligence Developer,Business Intelligence
+4,Data Engineer — Commercial,SQL
+4,Data Engineer — Commercial,Python
+4,Data Engineer — Commercial,Azure
+4,Data Engineer — Commercial,AWS
+4,Data Engineer — Commercial,GCP
+4,Data Engineer — Commercial,Snowflake
+4,Data Engineer — Commercial,BigQuery
+4,Data Engineer — Commercial,dbt
+4,Data Engineer — Commercial,Airflow
+4,Data Engineer — Commercial,Spark
+4,Data Engineer — Commercial,Data Warehouse
+4,Data Engineer — Commercial,Machine Learning
+4,Data Engineer — Commercial,Data Quality
+4,Data Engineer — Commercial,Data Catalog
+4,Data Engineer — Commercial,Agile
+4,Data Engineer — Commercial,Stakeholder
+4,Data Engineer — Commercial,Reporting
+5,Analytics Engineer,SQL
+5,Analytics Engineer,Python
+5,Analytics Engineer,Power BI
+5,Analytics Engineer,Looker
+5,Analytics Engineer,Snowflake
+5,Analytics Engineer,Databricks
+5,Analytics Engineer,dbt
+5,Analytics Engineer,Airflow
+5,Analytics Engineer,Data Modeling
+5,Analytics Engineer,Data Warehouse
+5,Analytics Engineer,Dimensional Modeling
+5,Analytics Engineer,Machine Learning
+5,Analytics Engineer,Statistics
+5,Analytics Engineer,Data Governance
+5,Analytics Engineer,Data Quality
+5,Analytics Engineer,Lineage
+5,Analytics Engineer,Agile
+5,Analytics Engineer,Stakeholder
+5,Analytics Engineer,Dashboards
+5,Analytics Engineer,Business Intelligence
+6,Director of Data & Analytics,SQL
+6,Director of Data & Analytics,Python
+6,Director of Data & Analytics,Power BI
+6,Director of Data & Analytics,Tableau
+6,Director of Data & Analytics,Azure
+6,Director of Data & Analytics,AWS
+6,Director of Data & Analytics,GCP
+6,Director of Data & Analytics,Snowflake
+6,Director of Data & Analytics,Databricks
+6,Director of Data & Analytics,BigQuery
+6,Director of Data & Analytics,ETL
+6,Director of Data & Analytics,ELT
+6,Director of Data & Analytics,Data Warehouse
+6,Director of Data & Analytics,Data Lake
+6,Director of Data & Analytics,Data Lakehouse
+6,Director of Data & Analytics,Star Schema
+6,Director of Data & Analytics,Dimensional Modeling
+6,Director of Data & Analytics,Data Governance
+6,Director of Data & Analytics,Data Quality
+6,Director of Data & Analytics,Data Catalog
+6,Director of Data & Analytics,GDPR
+6,Director of Data & Analytics,Agile
+6,Director of Data & Analytics,KPIs
+6,Director of Data & Analytics,Reporting
+6,Director of Data & Analytics,Business Intelligence
+7,Junior Data Analyst,SQL
+7,Junior Data Analyst,Python
+7,Junior Data Analyst,Power BI
+7,Junior Data Analyst,Excel
+7,Junior Data Analyst,ETL
+7,Junior Data Analyst,SQL Server
+7,Junior Data Analyst,Data Modeling
+7,Junior Data Analyst,Data Warehouse
+7,Junior Data Analyst,Data Quality
+7,Junior Data Analyst,Agile
+7,Junior Data Analyst,Stakeholder
+7,Junior Data Analyst,KPIs
+7,Junior Data Analyst,Reporting
+7,Junior Data Analyst,Business Intelligence
+8,Data Science Engineer,SQL
+8,Data Science Engineer,Python
+8,Data Science Engineer,Power BI
+8,Data Science Engineer,Looker
+8,Data Science Engineer,Azure
+8,Data Science Engineer,AWS
+8,Data Science Engineer,GCP
+8,Data Science Engineer,Snowflake
+8,Data Science Engineer,Databricks
+8,Data Science Engineer,Airflow
+8,Data Science Engineer,Spark
+8,Data Science Engineer,Data Warehouse
+8,Data Science Engineer,Dimensional Modeling
+8,Data Science Engineer,Machine Learning
+8,Data Science Engineer,Statistics
+8,Data Science Engineer,Data Governance
+8,Data Science Engineer,Data Quality
+8,Data Science Engineer,Data Pipeline
+8,Data Science Engineer,Reporting
+8,Data Science Engineer,Business Intelligence
+9,Supply Chain Data Analyst,SQL
+9,Supply Chain Data Analyst,Python
+9,Supply Chain Data Analyst,Power BI
+9,Supply Chain Data Analyst,Excel
+9,Supply Chain Data Analyst,ETL
+9,Supply Chain Data Analyst,SQL Server
+9,Supply Chain Data Analyst,Oracle
+9,Supply Chain Data Analyst,Data Modeling
+9,Supply Chain Data Analyst,Data Quality
+9,Supply Chain Data Analyst,Agile
+9,Supply Chain Data Analyst,KPIs
+9,Supply Chain Data Analyst,Reporting
+9,Supply Chain Data Analyst,Business Intelligence
+10,Data Governance Analyst,SQL
+10,Data Governance Analyst,Python
+10,Data Governance Analyst,Power BI
+10,Data Governance Analyst,Tableau
+10,Data Governance Analyst,SQL Server
+10,Data Governance Analyst,Data Governance
+10,Data Governance Analyst,Data Quality
+10,Data Governance Analyst,Data Catalog
+10,Data Governance Analyst,Lineage
+10,Data Governance Analyst,GDPR
+10,Data Governance Analyst,KPIs
+10,Data Governance Analyst,Reporting
+10,Data Governance Analyst,Business Intelligence

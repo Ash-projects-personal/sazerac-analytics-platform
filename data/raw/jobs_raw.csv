@@ -1,0 +1,83 @@
+job_id,job_title,department,location,employment_type,posted_date,description,skills_extracted,scraped_at
+1,Senior Data Engineer,Data & Analytics,"Louisville, KY",Full-Time,2024-11-15,"We are seeking a Senior Data Engineer to join our growing Data & Analytics team.
+        Responsibilities include building and maintaining ETL/ELT data pipelines using Python and SQL.
+        The ideal candidate will have experience with Azure Data Factory, Databricks, and Snowflake.
+        You will design and implement data models following dimensional modeling best practices including star schema.
+        Experience with dbt, Airflow for workflow orchestration, and Power BI for data visualization is required.
+        Must be comfortable working in an Agile environment and collaborating with stakeholders across the business.
+        Data governance and data quality checks are a core part of this role. KPIs and reporting requirements will be
+        defined in collaboration with business partners. SQL Server and PostgreSQL experience preferred.
+        Knowledge of data warehouse architecture, data lake, and data lakehouse patterns is essential.",SQL|Python|Power BI|Azure|Snowflake|Databricks|ETL|ELT|dbt|Airflow|SQL Server|PostgreSQL|Data Warehouse|Data Lake|Data Lakehouse|Star Schema|Dimensional Modeling|Data Governance|Data Quality|Agile|KPIs|Reporting|Business Intelligence,2026-03-31T23:59:09.134484
+2,Data Analyst — Brand Analytics,Data & Analytics,"Louisville, KY",Full-Time,2024-11-20,"Seeking a Data Analyst to support brand performance analytics across the Sazerac portfolio.
+        Responsibilities: Develop Power BI dashboards and Excel-based reporting for senior leadership.
+        Write complex SQL queries against our SQL Server data warehouse to extract insights on brand KPIs.
+        Perform ad hoc analysis using Python and R for statistical analysis and data visualization.
+        Work closely with brand managers to define reporting requirements and business intelligence needs.
+        Create and maintain dashboards that track volume, distribution, pricing, and share metrics.
+        Data quality checks and validation of reporting data is part of day-to-day responsibilities.
+        Experience with Tableau or Looker is a plus. Must be able to communicate insights to non-technical stakeholders.",SQL|Python|R|Power BI|Tableau|Looker|Excel|SQL Server|Data Warehouse|Statistics|Data Quality|KPIs|Reporting|Business Intelligence,2026-03-31T23:59:09.134484
+3,Business Intelligence Developer,IT & Technology,"Louisville, KY",Full-Time,2024-11-22,"The BI Developer will design, build, and maintain enterprise reporting solutions.
+        Core skills required: Power BI (including DAX and data modeling), SQL Server, SSRS, and Excel.
+        You will work with Azure cloud infrastructure and integrate data from multiple source systems.
+        Build and maintain ETL processes to support reporting and analytics workloads.
+        Experience with dimensional modeling, star schema design, and OLAP cubes is a strong plus.
+        This role requires strong data governance practices and adherence to data quality standards.
+        Reporting directly to the VP of Analytics, you will support KPI dashboards for executive stakeholders.
+        Agile project methodology experience required. Familiarity with Snowflake or Redshift is a plus.",SQL|DAX|Power BI|Excel|SSRS|Azure|Snowflake|Redshift|ETL|SQL Server|Data Modeling|Star Schema|OLAP|Dimensional Modeling|Data Governance|Data Quality|Agile|KPIs|Reporting|Business Intelligence,2026-03-31T23:59:09.134484
+4,Data Engineer — Commercial,Commercial / Sales Analytics,"Louisville, KY (Hybrid)",Full-Time,2024-11-25,"We're building out our Commercial data infrastructure and need a Data Engineer with strong
+        Python, SQL, and cloud (AWS or Azure) experience. You will own end-to-end data pipelines from raw ingestion
+        to curated data marts consumed by analysts and dashboards.
+        Technologies: Python (pandas, PySpark), Apache Airflow, dbt, Snowflake, and AWS S3/Glue.
+        Design data models aligned with business requirements for sales analytics and distribution reporting.
+        Partner with the Data Science team to expose machine learning model outputs through the data warehouse.
+        Data quality, lineage, and data catalog management using modern tooling is essential.
+        BigQuery and GCP experience is a bonus. Agile, Scrum, and stakeholder communication skills required.",SQL|Python|Azure|AWS|GCP|Snowflake|BigQuery|dbt|Airflow|Spark|Data Warehouse|Machine Learning|Data Quality|Data Catalog|Agile|Stakeholder|Reporting,2026-03-31T23:59:09.134484
+5,Analytics Engineer,Data & Analytics,Remote,Full-Time,2024-12-01,"The Analytics Engineer role bridges data engineering and data analysis, owning the
+        transformation layer of our data platform. Primary tools: dbt, SQL, Python, and Databricks.
+        You will build and document data models used by analysts across brand, finance, and supply chain teams.
+        Experience with dimensional modeling, data warehouse design, and data modeling best practices is required.
+        You will ensure data quality by implementing automated testing, data lineage, and data governance frameworks.
+        Work with Looker or Power BI for semantic layer development and dashboard delivery.
+        Snowflake is our primary data warehouse. Airflow orchestrates our pipelines.
+        Knowledge of machine learning model deployment and statistical analysis is preferred.
+        Strong stakeholder management and Agile project management skills.",SQL|Python|Power BI|Looker|Snowflake|Databricks|dbt|Airflow|Data Modeling|Data Warehouse|Dimensional Modeling|Machine Learning|Statistics|Data Governance|Data Quality|Lineage|Agile|Stakeholder|Dashboards|Business Intelligence,2026-03-31T23:59:09.134484
+6,Director of Data & Analytics,Leadership,"Louisville, KY",Full-Time,2024-12-05,"Sazerac is seeking an experienced Director of Data & Analytics to lead our enterprise
+        analytics function. You will oversee a team of data engineers, analysts, and BI developers.
+        Requirements: Proven track record in building data warehouse, data lake, and data lakehouse platforms.
+        Expertise in cloud data platforms (Azure, AWS, or GCP), ETL/ELT pipelines, and modern data stack.
+        Must have experience with data governance, GDPR compliance, data quality programs, and data catalog initiatives.
+        Champion Agile delivery methodology. Drive KPI frameworks and executive reporting through Power BI or Tableau.
+        Partner with C-suite and stakeholders to define data strategy and business intelligence roadmap.
+        Hands-on knowledge of SQL, Python, and BI tools. Dimensional modeling and star schema experience preferred.
+        Snowflake, Databricks, or BigQuery platform experience required.",SQL|Python|Power BI|Tableau|Azure|AWS|GCP|Snowflake|Databricks|BigQuery|ETL|ELT|Data Warehouse|Data Lake|Data Lakehouse|Star Schema|Dimensional Modeling|Data Governance|Data Quality|Data Catalog|GDPR|Agile|KPIs|Reporting|Business Intelligence,2026-03-31T23:59:09.134484
+7,Junior Data Analyst,Finance Analytics,"Louisville, KY",Full-Time,2024-12-08,"Entry-level Data Analyst opportunity in our Finance Analytics team.
+        You will support financial reporting and KPIs using Excel, SQL, and Power BI.
+        Responsibilities include data quality checks, building dashboards, and producing weekly/monthly reports.
+        You will query our SQL Server data warehouse and help automate ETL processes with Python scripts.
+        Exposure to Agile project management and stakeholder communication.
+        Learning opportunities across data modeling, reporting, and business intelligence practices.
+        Strong Excel skills required. Power BI and SQL experience preferred. R or Python is a plus.",SQL|Python|Power BI|Excel|ETL|SQL Server|Data Modeling|Data Warehouse|Data Quality|Agile|Stakeholder|KPIs|Reporting|Business Intelligence,2026-03-31T23:59:09.134484
+8,Data Science Engineer,Innovation & Strategy,Remote,Full-Time,2024-12-10,"We are looking for a Data Science Engineer to join our growing Innovation team.
+        You will build machine learning models and integrate them into our data pipeline infrastructure.
+        Skills required: Python (pandas, scikit-learn, PySpark), SQL, Spark, and cloud (AWS or Azure or GCP).
+        Experience deploying ML models via Databricks, Airflow, and integrating outputs with Snowflake.
+        Strong statistical analysis background and experience with A/B testing frameworks.
+        Work with data governance teams to ensure data quality and lineage across ML pipelines.
+        Communicate results to stakeholders using dashboards and reporting. Power BI or Looker experience is a plus.
+        Knowledge of data warehouse architecture and dimensional modeling helps in this role.",SQL|Python|Power BI|Looker|Azure|AWS|GCP|Snowflake|Databricks|Airflow|Spark|Data Warehouse|Dimensional Modeling|Machine Learning|Statistics|Data Governance|Data Quality|Data Pipeline|Reporting|Business Intelligence,2026-03-31T23:59:09.134484
+9,Supply Chain Data Analyst,Supply Chain & Operations,"Frankfort, KY",Full-Time,2024-12-12,"Seeking a Supply Chain Data Analyst to provide reporting and analytics support.
+        Primary tools: Excel (advanced), SQL Server, Power BI, and Python for automation.
+        You will create dashboards tracking inventory, production KPIs, and logistics metrics.
+        Partner with operations stakeholders to gather reporting requirements and deliver business intelligence.
+        Conduct data quality checks on supply chain data feeds and maintain ETL scripts.
+        Data modeling experience is a plus. Agile experience preferred.
+        Familiarity with Oracle ERP or SAP data structures is highly valued.",SQL|Python|Power BI|Excel|ETL|SQL Server|Oracle|Data Modeling|Data Quality|Agile|KPIs|Reporting|Business Intelligence,2026-03-31T23:59:09.134484
+10,Data Governance Analyst,Data & Analytics,"Louisville, KY",Full-Time,2024-12-15,"The Data Governance Analyst will champion data quality, data lineage, and
+        data catalog initiatives across Sazerac's enterprise data ecosystem.
+        Core responsibilities: Implement data governance frameworks using tools like Alation or Collibra.
+        Conduct data quality profiling, create and enforce data quality rules, and produce data quality KPIs.
+        Work closely with data engineers, SQL Server DBAs, and business stakeholders to establish data ownership.
+        GDPR and regulatory compliance experience strongly preferred.
+        SQL proficiency is required for data profiling and quality reporting.
+        Power BI or Tableau for governance metrics dashboards. Python scripting for automation.
+        Experience with data catalog, data lineage tools, and metadata management is essential.",SQL|Python|Power BI|Tableau|SQL Server|Data Governance|Data Quality|Data Catalog|Lineage|GDPR|KPIs|Reporting|Business Intelligence,2026-03-31T23:59:09.134484

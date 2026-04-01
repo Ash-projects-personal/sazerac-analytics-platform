@@ -1,0 +1,46 @@
+skill,frequency,pct_of_postings
+SQL,10,100.0
+Data Quality,10,100.0
+Python,9,90.0
+Power BI,9,90.0
+Reporting,9,90.0
+Business Intelligence,9,90.0
+Data Warehouse,7,70.0
+Agile,7,70.0
+KPIs,7,70.0
+Snowflake,6,60.0
+SQL Server,6,60.0
+Data Governance,6,60.0
+Azure,5,50.0
+ETL,5,50.0
+Dimensional Modeling,5,50.0
+Databricks,4,40.0
+Airflow,4,40.0
+Excel,4,40.0
+Data Modeling,4,40.0
+dbt,3,30.0
+Star Schema,3,30.0
+Tableau,3,30.0
+Looker,3,30.0
+Statistics,3,30.0
+AWS,3,30.0
+GCP,3,30.0
+Machine Learning,3,30.0
+Data Catalog,3,30.0
+Stakeholder,3,30.0
+ELT,2,20.0
+Data Lake,2,20.0
+Data Lakehouse,2,20.0
+BigQuery,2,20.0
+Spark,2,20.0
+Lineage,2,20.0
+GDPR,2,20.0
+PostgreSQL,1,10.0
+R,1,10.0
+DAX,1,10.0
+SSRS,1,10.0
+Redshift,1,10.0
+OLAP,1,10.0
+Dashboards,1,10.0
+Data Pipeline,1,10.0
+Oracle,1,10.0

@@ -1,0 +1,7 @@
+2026-03-31 23:59:09,111 | INFO | === Job Scraper Starting ===
+2026-03-31 23:59:09,114 | WARNING | Jobs scrape failed (HTTPSConnectionPool(host='www.sazerac.com', port=443): Max retries exceeded with url: /careers/ (Caused by NameResolutionError("HTTPSConnection(host='www.sazerac.com', port=443): Failed to resolve 'www.sazerac.com' ([Errno -3] Temporary failure in name resolution)"))). Using mock data.
+2026-03-31 23:59:09,114 | INFO | Loading 10 jobs from mock dataset
+2026-03-31 23:59:09,143 | INFO | Saved 10 jobs → data/raw/jobs_raw.csv
+2026-03-31 23:59:09,150 | INFO | Saved skill frequency table (45 unique skills) → data/raw/job_skills.csv
+2026-03-31 23:59:09,151 | INFO | Saved job-skill mapping (179 rows) → data/raw/job_skill_mapping.csv
+2026-03-31 23:59:09,151 | INFO | === Job Scraper Complete ===
