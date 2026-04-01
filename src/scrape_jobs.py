@@ -74,7 +74,6 @@ SKILL_PATTERNS = {
     "Airflow": r"\b(Airflow|Apache Airflow)\b",
     "Spark": r"\b(Spark|PySpark|Apache Spark)\b",
     "Kafka": r"\bKafka\b",
-    "dbt": r"\bdbt\b",
     # Databases
     "SQL Server": r"\b(SQL Server|MSSQL|Microsoft SQL)\b",
     "PostgreSQL": r"\b(PostgreSQL|Postgres)\b",
