@@ -7,7 +7,7 @@ on:
     branches: [main]
   schedule:
     # Run pipeline weekly — Sunday 6am UTC
-    - cron: '0 6 * * 0'
+    - cron: '0 6 * * *'
 
 jobs:
   # ── Job 1: Lint & Code Quality ─────────────────────────────────────────────
