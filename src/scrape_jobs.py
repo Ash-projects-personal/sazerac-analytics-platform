@@ -303,7 +303,7 @@ def scrape_jobs_apify():
         run_input = {
             "startUrls": [
                 {"url": "https://sazerac.wd1.myworkdayjobs.com/en-US/Sazerac_Careers"},
-                {"url": "https://www.sazerac.com/careers"},
+                {"url": "https://sazerac.wd1.myworkdayjobs.com/en-US/Sazerac_Careers"},
             ],
             "maxCrawlPages": 10,
             "crawlerType": "cheerio",
@@ -359,7 +359,7 @@ def get_jobs() -> list[dict]:
     The curated set is what runs in CI."""
     if SCRAPING_AVAILABLE:
         try:
-            careers_url = "https://www.sazerac.com/careers/"
+            careers_url = "https://sazerac.wd1.myworkdayjobs.com/en-US/Sazerac_Careers/"
             headers = {"User-Agent": "Mozilla/5.0 (research/portfolio-project)"}
             resp = requests.get(careers_url, headers=headers, timeout=15)
             resp.raise_for_status()
