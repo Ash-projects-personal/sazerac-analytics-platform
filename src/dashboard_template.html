@@ -1311,6 +1311,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     function toggleSidebar() {
       sidebar && sidebar.classList.contains('mob-open') ? closeSidebar() : openSidebar();
     }
+    window.toggleSidebar = toggleSidebar;
 
     if (btn) btn.addEventListener('click', toggleSidebar);
     if (overlay) overlay.addEventListener('click', closeSidebar);
