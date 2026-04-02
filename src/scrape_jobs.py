@@ -13,7 +13,6 @@ Outputs:
 
 import csv
 import logging
-import os
 import re
 from collections import Counter
 from datetime import datetime
@@ -22,6 +21,7 @@ import os
 
 try:
     from apify_client import ApifyClient
+
     APIFY_AVAILABLE = True
 except ImportError:
     APIFY_AVAILABLE = False
@@ -292,83 +292,63 @@ def extract_skills(text: str) -> list[str]:
     return found
 
 
-
-
 def scrape_jobs_apify():
-    """
-    Pull live Sazerac job postings via Apify's website crawler.
-    Uses the free tier — only fires when APIFY_TOKEN env var is set.
-    Returns a list of job dicts on success, None on failure/no token.
-    """
+    """Pull live Sazerac job postings via Apify free tier. Returns list or None."""
     token = os.environ.get("APIFY_TOKEN")
     if not token or not APIFY_AVAILABLE:
         return None
-
-    print("🌐  Apify token found — attempting live job scrape...")
+    print("Apify token found - attempting live scrape...")
     try:
         client = ApifyClient(token)
-
-        # Sazerac's public Workday careers page — data/analytics filter
         run_input = {
             "startUrls": [
                 {"url": "https://sazerac.wd1.myworkdayjobs.com/en-US/Sazerac_Careers"},
                 {"url": "https://www.sazerac.com/careers"},
             ],
             "maxCrawlPages": 10,
-            "crawlerType": "cheerio",          # lightweight, fits free tier easily
+            "crawlerType": "cheerio",
             "maxCrawlDepth": 2,
         }
-
         run = client.actor("apify/website-content-crawler").call(
-            run_input=run_input,
-            timeout_secs=120,
+            run_input=run_input, timeout_secs=120
         )
-
-        raw_items = list(
-            client.dataset(run["defaultDatasetId"]).iterate_items()
-        )
-
-        jobs = []
-        seen_titles = set()
-
-        for item in raw_items:
+        raw = list(client.dataset(run["defaultDatasetId"]).iterate_items())
+        jobs, seen = [], set()
+        kws = [
+            "data",
+            "analyst",
+            "engineer",
+            "analytics",
+            "bi ",
+            "science",
+            "warehouse",
+            "governance",
+        ]
+        for item in raw:
             text = item.get("text", "") or item.get("markdown", "") or ""
-            url  = item.get("url", "")
-
-            # Pull job titles from headings / list items in the page text
-            title_matches = re.findall(
-                r"(?:^|
-)([A-Z][A-Za-z &/\-–,()]{10,80})\s*(?:
-|$)",
-                text
-            )
-            for title in title_matches:
+            url = item.get("url", "")
+            for title in re.findall(r"(?:^|\n)([A-Z][A-Za-z &/\-,()]{10,80})\s*(?:\n|$)", text):
                 title = title.strip()
-                # basic filter — skip navigation noise
-                if any(kw in title.lower() for kw in [
-                    "data", "analyst", "engineer", "analytics", "bi ",
-                    "business intel", "science", "warehouse", "governance",
-                ]) and title not in seen_titles:
-                    seen_titles.add(title)
-                    jobs.append({
-                        "job_title": title,
-                        "department": "Data & Analytics",
-                        "location": "Louisville, KY",
-                        "job_type": "Full-time",
-                        "source_url": url,
-                        "description": text[:500].strip(),
-                        "scraped_live": True,
-                    })
-
+                if any(k in title.lower() for k in kws) and title not in seen:
+                    seen.add(title)
+                    jobs.append(
+                        {
+                            "job_title": title,
+                            "department": "Data & Analytics",
+                            "location": "Louisville, KY",
+                            "job_type": "Full-time",
+                            "source_url": url,
+                            "description": text[:500].strip(),
+                            "scraped_live": True,
+                        }
+                    )
         if jobs:
-            print(f"✅  Apify returned {len(jobs)} live job(s)")
+            print(f"Apify returned {len(jobs)} live jobs")
             return jobs
-        else:
-            print("⚠️   Apify ran but found no matching jobs — falling back to mock data")
-            return None
-
-    except Exception as exc:
-        print(f"⚠️   Apify scrape failed ({exc}) — falling back to mock data")
+        print("Apify found nothing - using mock data")
+        return None
+    except Exception as e:
+        print(f"Apify failed ({e}) - using mock data")
         return None
 
 
@@ -411,10 +391,7 @@ def get_jobs() -> list[dict]:
             log.warning("Jobs scrape failed (%s). Using mock data.", exc)
 
     log.info("Loading %d jobs from mock dataset", len(MOCK_JOBS))
-    apify_result = scrape_jobs_apify()
-        if apify_result:
-            return apify_result
-        return MOCK_JOBS
+    return MOCK_JOBS
 
 
 def save_jobs(jobs: list[dict], path: str) -> None:
