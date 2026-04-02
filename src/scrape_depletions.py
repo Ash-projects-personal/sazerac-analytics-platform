@@ -6,7 +6,6 @@ Sazerac BI analysts work with daily. 12 months x 6 brands x 10 states.
 
 import csv
 import logging
-import os
 from datetime import datetime
 from pathlib import Path
 

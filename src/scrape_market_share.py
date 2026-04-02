@@ -5,7 +5,8 @@ distribution, velocity, and price tier. These are the exact metrics
 CPG analysts pull from NIQ/IRI reports for Sazerac brand scorecards.
 """
 
-import csv, logging
+import csv
+import logging
 from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
