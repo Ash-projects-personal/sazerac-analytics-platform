@@ -306,7 +306,7 @@ def scrape_jobs_apify():
                 {"url": "https://sazerac.wd1.myworkdayjobs.com/en-US/Sazerac_Careers"},
             ],
             "maxCrawlPages": 10,
-            "crawlerType": "cheerio",
+            "crawlerType": "playwright",
             "maxCrawlDepth": 2,
         }
         run = client.actor("apify/website-content-crawler").call(
