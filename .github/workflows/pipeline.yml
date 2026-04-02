@@ -60,6 +60,10 @@ jobs:
       - name: Run scraper — locations
         run: python src/scrape_locations.py
 
+      - name: Run scraper — depletions & market share
+        run: |
+          python src/scrape_depletions.py
+          python src/scrape_market_share.py
       - name: Run scraper — jobs & skills
         run: python src/scrape_jobs.py
 
@@ -77,7 +81,7 @@ jobs:
           python -c "
           import sqlite3, sys
           conn = sqlite3.connect('data/sazerac_analytics.db')
-          tables = ['dim_brand', 'dim_location', 'fact_jobs', 'fact_job_skills']
+          tables = ['dim_brand', 'dim_location', 'fact_jobs', 'fact_job_skills', 'fact_depletions', 'fact_market_share']
           for t in tables:
               count = conn.execute(f'SELECT COUNT(*) FROM {t}').fetchone()[0]
               assert count > 0, f'Table {t} is empty!'
@@ -127,6 +131,8 @@ jobs:
           python src/scrape_brands.py
           python src/scrape_locations.py
           python src/scrape_jobs.py
+          python src/scrape_depletions.py
+          python src/scrape_market_share.py
           python src/process_data.py
           python src/build_db.py
           python src/build_dashboard.py

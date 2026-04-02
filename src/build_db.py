@@ -108,6 +108,39 @@ CREATE TABLE IF NOT EXISTS fact_job_skills (
     processed_at      TEXT
 );
 
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- FACT_DEPLETIONS: Monthly case volume (VIP/iDig-style)
+-- ─────────────────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS fact_depletions (
+    depletion_sk       INTEGER PRIMARY KEY AUTOINCREMENT,
+    year               INTEGER NOT NULL,
+    month              INTEGER NOT NULL,
+    month_label        TEXT    NOT NULL,
+    brand              TEXT    NOT NULL,
+    category           TEXT,
+    price_tier         TEXT,
+    state_code         TEXT    NOT NULL,
+    state_name         TEXT    NOT NULL,
+    is_control_state   INTEGER DEFAULT 0,
+    channel_on_premise  INTEGER DEFAULT 0,
+    channel_off_premise INTEGER DEFAULT 0,
+    total_cases        INTEGER DEFAULT 0
+);
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- FACT_MARKET_SHARE: Nielsen/IRI-style syndicated metrics
+-- ─────────────────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS fact_market_share (
+    ms_sk                INTEGER PRIMARY KEY AUTOINCREMENT,
+    brand                TEXT NOT NULL,
+    category             TEXT,
+    volume_share_pct     REAL DEFAULT 0.0,
+    numeric_distribution REAL DEFAULT 0.0,
+    velocity_per_point   REAL DEFAULT 0.0,
+    price_tier           TEXT
+);
+
 -- ─────────────────────────────────────────────────────────────────────────────
 -- DQ_LOG: Data quality check results (governance)
 -- ─────────────────────────────────────────────────────────────────────────────
@@ -205,6 +238,40 @@ SELECT
 FROM fact_jobs
 GROUP BY department
 ORDER BY job_count DESC;
+
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- VIEW: depletion_trend — monthly totals per brand (last 12 months)
+-- ─────────────────────────────────────────────────────────────────────────────
+DROP VIEW IF EXISTS depletion_trend;
+CREATE VIEW depletion_trend AS
+SELECT
+    brand,
+    month_label,
+    year,
+    month,
+    price_tier,
+    SUM(total_cases)         AS total_cases,
+    SUM(channel_on_premise)  AS on_premise_cases,
+    SUM(channel_off_premise) AS off_premise_cases
+FROM fact_depletions
+GROUP BY brand, year, month, month_label, price_tier
+ORDER BY brand, year, month;
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- VIEW: control_state_summary — open vs control state performance
+-- ─────────────────────────────────────────────────────────────────────────────
+DROP VIEW IF EXISTS control_state_summary;
+CREATE VIEW control_state_summary AS
+SELECT
+    brand,
+    CASE WHEN is_control_state = 1 THEN 'Control State' ELSE 'Open State' END AS state_type,
+    SUM(total_cases)  AS total_cases,
+    COUNT(DISTINCT state_code) AS state_count,
+    ROUND(AVG(total_cases), 0) AS avg_cases_per_state
+FROM fact_depletions
+GROUP BY brand, is_control_state
+ORDER BY brand, is_control_state;
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- VIEW: portfolio_summary — executive KPI view
@@ -435,6 +502,9 @@ def export_views_to_csv(conn: sqlite3.Connection) -> None:
         "top_requested_tools": "SELECT * FROM top_requested_tools",
         "jobs_by_department": "SELECT * FROM jobs_by_department",
         "portfolio_summary": "SELECT * FROM portfolio_summary",
+        "depletion_trend": "SELECT * FROM depletion_trend",
+        "control_state_summary": "SELECT * FROM control_state_summary",
+        "market_share": "SELECT * FROM fact_market_share",
     }
     os.makedirs(MARTS_DIR, exist_ok=True)
     for name, sql in exports.items():
@@ -442,6 +512,71 @@ def export_views_to_csv(conn: sqlite3.Connection) -> None:
         path = f"{MARTS_DIR}/{name}.csv"
         df.to_csv(path, index=False)
         log.info("Exported view '%s' → %s (%d rows)", name, path, len(df))
+
+
+def load_depletions(conn: sqlite3.Connection) -> int:
+    """Load monthly depletion data from raw CSV into fact_depletions."""
+    path = "data/raw/depletions_raw.csv"
+    if not os.path.exists(path):
+        log.warning("Depletions CSV not found, skipping: %s", path)
+        return 0
+    df = pd.read_csv(path)
+    log.info("Loading %d depletion records into fact_depletions...", len(df))
+    conn.execute("DELETE FROM fact_depletions")
+    for _, row in df.iterrows():
+        conn.execute(
+            """INSERT INTO fact_depletions
+               (year, month, month_label, brand, category, price_tier,
+                state_code, state_name, is_control_state,
+                channel_on_premise, channel_off_premise, total_cases)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (
+                int(row["year"]),
+                int(row["month"]),
+                str(row["month_label"]),
+                str(row["brand"]),
+                str(row["category"]),
+                str(row["price_tier"]),
+                str(row["state_code"]),
+                str(row["state_name"]),
+                int(row["is_control_state"]),
+                int(row["channel_on_premise"]),
+                int(row["channel_off_premise"]),
+                int(row["total_cases"]),
+            ),
+        )
+    conn.commit()
+    log.info("fact_depletions loaded: %d records", len(df))
+    return len(df)
+
+
+def load_market_share(conn: sqlite3.Connection) -> int:
+    """Load Nielsen/IRI-style market share data into fact_market_share."""
+    path = "data/raw/market_share_raw.csv"
+    if not os.path.exists(path):
+        log.warning("Market share CSV not found, skipping: %s", path)
+        return 0
+    df = pd.read_csv(path)
+    log.info("Loading %d market share records into fact_market_share...", len(df))
+    conn.execute("DELETE FROM fact_market_share")
+    for _, row in df.iterrows():
+        conn.execute(
+            """INSERT INTO fact_market_share
+               (brand, category, volume_share_pct, numeric_distribution,
+                velocity_per_point, price_tier)
+               VALUES (?,?,?,?,?,?)""",
+            (
+                str(row["brand"]),
+                str(row["category"]),
+                float(row["volume_share_pct"]),
+                float(row["numeric_distribution"]),
+                float(row["velocity_per_point"]),
+                str(row["price_tier"]),
+            ),
+        )
+    conn.commit()
+    log.info("fact_market_share loaded: %d records", len(df))
+    return len(df)
 
 
 def main():
@@ -455,6 +590,8 @@ def main():
         load_locations(conn)
         load_jobs(conn)
         load_job_skills(conn)
+        load_depletions(conn)
+        load_market_share(conn)
         create_views(conn)
         validate_db(conn)
         export_views_to_csv(conn)

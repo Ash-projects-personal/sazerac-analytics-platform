@@ -937,5 +937,222 @@ window.addEventListener('DOMContentLoaded',()=>{
   setTimeout(()=>animBars(),220);
 });
 </script>
+
+  <!-- ═══════════ MARKET INTELLIGENCE PAGE ═══════════════════════════════════ -->
+  <section id="page-market-intel" class="page" style="display:none">
+    <div class="page-header">
+      <h1 class="page-title">Market <span class="accent">Intelligence</span></h1>
+      <p class="page-subtitle">Depletion trends · Nielsen/IRI market share · Control state analysis · Channel split</p>
+    </div>
+
+    <!-- KPI row -->
+    <div class="kpi-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px">
+      <div class="kpi-card">
+        <div class="kpi-label">Cinnamon Whiskey Share</div>
+        <div class="kpi-value" id="mi-fireball-share">62.4%</div>
+        <div class="kpi-sub">Fireball dominates category</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Pappy Distribution</div>
+        <div class="kpi-value" id="mi-pappy-dist">12.1%</div>
+        <div class="kpi-sub">Ultra-premium scarcity model</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Control State Discount</div>
+        <div class="kpi-value">~30%</div>
+        <div class="kpi-sub">Lower vol vs open states</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Off-Premise Split</div>
+        <div class="kpi-value">78%</div>
+        <div class="kpi-sub">Retail dominates channel</div>
+      </div>
+    </div>
+
+    <!-- Charts row 1 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px">
+      <div class="chart-card">
+        <h3 class="chart-title">Monthly Case Depletions — Top 3 Brands</h3>
+        <p class="chart-sub">12-month trend · national aggregated cases (VIP/iDig-style)</p>
+        <canvas id="chartDepletion" height="260"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3 class="chart-title">Volume Market Share by Brand</h3>
+        <p class="chart-sub">Nielsen/IRI-style syndicated volume share %</p>
+        <canvas id="chartMarketShare" height="260"></canvas>
+      </div>
+    </div>
+
+    <!-- Charts row 2 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div class="chart-card">
+        <h3 class="chart-title">Control vs Open State Performance</h3>
+        <p class="chart-sub">Avg monthly cases · regulatory impact on volume</p>
+        <canvas id="chartControlState" height="260"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3 class="chart-title">On-Premise vs Off-Premise Channel Split</h3>
+        <p class="chart-sub">Bars & restaurants vs retail — national blended</p>
+        <canvas id="chartChannel" height="260"></canvas>
+      </div>
+    </div>
+
+    <!-- Price tier table -->
+    <div class="chart-card" style="margin-top:24px">
+      <h3 class="chart-title">Price Tier × Distribution Matrix</h3>
+      <p class="chart-sub">Numeric distribution vs velocity per point — quadrant analysis</p>
+      <div style="overflow-x:auto">
+        <table class="data-table" id="tierTable">
+          <thead><tr>
+            <th>Brand</th><th>Price Tier</th><th>Category</th>
+            <th>Vol Share %</th><th>Numeric Dist %</th><th>Velocity / Pt</th>
+          </tr></thead>
+          <tbody id="tierTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <script>
+  // ── Market Intelligence Charts ──────────────────────────────────────────────
+  (function initMarketIntel() {
+    const AMBER = '#B8964A';
+    const palette = ['#B8964A','#6B4F2A','#D4AF6A','#8B6914','#E8D5A3','#5A3E1B'];
+
+    function buildDepletionChart() {
+      const raw = (typeof DATA !== 'undefined' && DATA.depletions) ? DATA.depletions : [];
+      if (!raw.length) return;
+
+      // Get unique sorted month_labels and top 3 brands
+      const allMonths = [...new Set(raw.map(r => r.month_label))];
+      const topBrands = ['Fireball', 'Buffalo Trace', 'Eagle Rare'];
+
+      const datasets = topBrands.map((brand, i) => ({
+        label: brand,
+        data: allMonths.map(m => {
+          const rows = raw.filter(r => r.brand === brand && r.month_label === m);
+          return rows.reduce((s, r) => s + (r.total_cases || 0), 0);
+        }),
+        borderColor: palette[i],
+        backgroundColor: palette[i] + '22',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 3,
+      }));
+
+      new Chart(document.getElementById('chartDepletion'), {
+        type: 'line',
+        data: { labels: allMonths, datasets },
+        options: {
+          responsive: true,
+          plugins: { legend: { labels: { color: '#c8b88a' } } },
+          scales: {
+            x: { ticks: { color: '#888', maxRotation: 45 }, grid: { color: '#333' } },
+            y: { ticks: { color: '#888' }, grid: { color: '#333' } },
+          },
+        },
+      });
+    }
+
+    function buildMarketShareChart() {
+      const raw = (typeof DATA !== 'undefined' && DATA.marketShare) ? DATA.marketShare : [];
+      if (!raw.length) return;
+      new Chart(document.getElementById('chartMarketShare'), {
+        type: 'bar',
+        data: {
+          labels: raw.map(r => r.brand),
+          datasets: [{
+            label: 'Volume Share %',
+            data: raw.map(r => r.volume_share_pct),
+            backgroundColor: raw.map((_, i) => palette[i % palette.length]),
+          }],
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: '#888', callback: v => v + '%' }, grid: { color: '#333' } },
+            y: { ticks: { color: '#c8b88a' }, grid: { color: '#333' } },
+          },
+        },
+      });
+    }
+
+    function buildControlStateChart() {
+      const raw = (typeof DATA !== 'undefined' && DATA.controlState) ? DATA.controlState : [];
+      if (!raw.length) return;
+      const brands = [...new Set(raw.map(r => r.brand))];
+      const openData = brands.map(b => { const r = raw.find(x => x.brand===b && x.state_type==='Open State'); return r ? r.avg_cases_per_state : 0; });
+      const ctrlData = brands.map(b => { const r = raw.find(x => x.brand===b && x.state_type==='Control State'); return r ? r.avg_cases_per_state : 0; });
+      new Chart(document.getElementById('chartControlState'), {
+        type: 'bar',
+        data: {
+          labels: brands,
+          datasets: [
+            { label: 'Open State', data: openData, backgroundColor: '#B8964A' },
+            { label: 'Control State', data: ctrlData, backgroundColor: '#5A3E1B' },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { labels: { color: '#c8b88a' } } },
+          scales: {
+            x: { ticks: { color: '#888' }, grid: { color: '#333' } },
+            y: { ticks: { color: '#888' }, grid: { color: '#333' } },
+          },
+        },
+      });
+    }
+
+    function buildChannelChart() {
+      new Chart(document.getElementById('chartChannel'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Off-Premise (Retail)', 'On-Premise (Bar/Restaurant)'],
+          datasets: [{ data: [78, 22], backgroundColor: ['#B8964A', '#5A3E1B'] }],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { labels: { color: '#c8b88a' } },
+          },
+        },
+      });
+    }
+
+    function buildTierTable() {
+      const raw = (typeof DATA !== 'undefined' && DATA.marketShare) ? DATA.marketShare : [];
+      const tbody = document.getElementById('tierTableBody');
+      if (!tbody || !raw.length) return;
+      tbody.innerHTML = raw.map(r => `
+        <tr>
+          <td>${r.brand}</td>
+          <td><span class="badge">${r.price_tier}</span></td>
+          <td>${r.category}</td>
+          <td>${r.volume_share_pct}%</td>
+          <td>${r.numeric_distribution}%</td>
+          <td>${r.velocity_per_point}</td>
+        </tr>`).join('');
+    }
+
+    // Init all charts when Market Intel page becomes active
+    let miInitialized = false;
+    document.querySelectorAll('[data-page]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        if (this.dataset.page === 'market-intel' && !miInitialized) {
+          miInitialized = true;
+          setTimeout(() => {
+            buildDepletionChart();
+            buildMarketShareChart();
+            buildControlStateChart();
+            buildChannelChart();
+            buildTierTable();
+          }, 50);
+        }
+      });
+    });
+  })();
+  </script>
 </body>
 </html>

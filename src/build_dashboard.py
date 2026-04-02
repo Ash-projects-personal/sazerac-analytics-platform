@@ -38,6 +38,17 @@ jobs_full = pd.read_csv("data/processed/jobs_clean.csv")[
     ["job_title", "department", "location", "seniority", "skill_count", "is_remote", "is_hybrid"]
 ].to_dict("records")
 
+
+# ── Load market intelligence data ──────────────────────────────────────────────
+depl_path = "data/marts/depletion_trend.csv"
+depletion_data = pd.read_csv(depl_path).to_dict("records") if os.path.exists(depl_path) else []
+
+ms_path = "data/marts/market_share.csv"
+market_share_data = pd.read_csv(ms_path).to_dict("records") if os.path.exists(ms_path) else []
+
+cs_path = "data/marts/control_state_summary.csv"
+control_state_data = pd.read_csv(cs_path).to_dict("records") if os.path.exists(cs_path) else []
+
 as_of = datetime.now().strftime("%B %d, %Y")
 
 DATA_JS = "\n".join(
