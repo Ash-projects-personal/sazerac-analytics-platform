@@ -31,3 +31,4 @@ ruff==0.4.4
 # Utilities
 python-dotenv==1.0.1
 tqdm==4.66.4
+apify-client>=1.0.0

@@ -119,6 +119,8 @@ jobs:
           cache: 'pip'
 
       - name: Install & run pipeline
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
         run: |
           pip install -r requirements.txt
           mkdir -p data/raw data/processed data/marts dashboard_exports logs dashboard
